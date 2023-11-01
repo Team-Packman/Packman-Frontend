@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/extensions
+import '@stackflow/plugin-basic-ui/index.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Normalize } from 'styled-normalize';
