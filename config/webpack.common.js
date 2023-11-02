@@ -3,6 +3,7 @@ const webpackUtils = require('./webpackUtils');
 const { getClientEnvironment, isDevelopment, isProduction, isLocal } = require('./env');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -62,6 +63,12 @@ module.exports = {
       template: paths.appHtml,
       favicon: paths.appFavicon,
       hash: true,
+    }),
+    new PreloadWebpackPlugin({
+      rel: 'preload',
+      fileWhitelist: [/\.woff2$/],
+      include: 'allAssets',
+      as: 'font',
     }),
     new DefinePlugin({ ...env.stringified, isDevelopment, isProduction, isLocal }),
     new ForkTsCheckerWebpackPlugin({
