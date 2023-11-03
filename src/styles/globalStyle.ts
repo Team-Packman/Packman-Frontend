@@ -5,15 +5,6 @@ import { normalize } from 'styled-normalize';
 import Pretendard from '@/assets/fonts/PretendardVariable.woff2';
 
 const globalStyle = css`
-  ${normalize}
-
-  @font-face {
-    font-family: 'Pretendard';
-    font-display: optional;
-    font-style: normal;
-    src: url(${Pretendard}) format('woff2');
-  }
-
   :root {
     --vh: 100%;
   }
@@ -33,7 +24,7 @@ const globalStyle = css`
 
   html,
   body {
-    font-family: 'Pretendard', 'sans-serif';
+    font-family: Pretendard, sans-serif;
   }
 
   a {
@@ -57,6 +48,7 @@ const globalStyle = css`
 
   input,
   textarea {
+    /* stylelint-disable-next-line declaration-property-unit-allowed-list */
     font-size: 16px;
 
     -webkit-appearance: none;
@@ -66,6 +58,7 @@ const globalStyle = css`
   }
 
   select {
+    /* stylelint-disable-next-line declaration-property-unit-allowed-list */
     font-size: 16px;
 
     -webkit-appearance: none;
@@ -74,6 +67,15 @@ const globalStyle = css`
     -webkit-border-radius: 0;
     border-radius: 0;
     outline: none;
+  }
+
+  ${normalize}
+
+  @font-face {
+    font-family: Pretendard;
+    font-style: normal;
+    font-display: optional;
+    src: url(${Pretendard}) format('woff2');
   }
 `;
 
