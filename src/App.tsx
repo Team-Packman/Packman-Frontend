@@ -4,7 +4,7 @@ import { Outlet } from 'react-router';
 import { ThemeProvider } from 'styled-components';
 
 import AppScreen from './components/@common/AppScreen/AppScreen';
-import GlobalStyle from './components/@common/GlobalStyle';
+import GlobalStyle from './components/@common/GlobalStyle/GlobalStyle';
 import { ONE_HOUR } from './constants/time';
 import theme from './styles/theme/theme';
 import { setScreenSize } from './utils/setScreenSize';
