@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Outlet } from 'react-router';
 import { ThemeProvider } from 'styled-components';
 
+import AppScreen from './components/@common/AppScreen/AppScreen';
 import GlobalStyle from './components/@common/GlobalStyle';
 import { ONE_HOUR } from './constants/time';
 import theme from './styles/theme/theme';
@@ -27,7 +28,9 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <GlobalStyle />
       <GlobalEvent />
-      <Outlet />
+      <AppScreen>
+        <Outlet />
+      </AppScreen>
     </QueryClientProvider>
   </ThemeProvider>
 );
