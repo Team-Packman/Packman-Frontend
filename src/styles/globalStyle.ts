@@ -5,10 +5,6 @@ import { normalize } from 'styled-normalize';
 import Pretendard from '@/assets/fonts/PretendardVariable.woff2';
 
 const globalStyle = css`
-  :root {
-    --vh: 100%;
-  }
-
   * {
     scrollbar-width: none;
 
