@@ -19,8 +19,8 @@ type DynamicParamsToString<
   Acc extends string = '',
 > = Str extends `${infer Char}${infer Rest}`
   ? Str extends `${':'}${string}`
-    ? Str extends `${':'}${string}${'/'}${infer Rest2}`
-      ? DynamicParamsToString<Rest2, `${Acc}${string}/`>
+    ? Str extends `${':'}${string}${'/'}${infer Rest}`
+      ? DynamicParamsToString<Rest, `${Acc}${string}/`>
       : DynamicParamsToString<'', `${Acc}${string}`>
     : DynamicParamsToString<Rest, `${Acc}${Lowercase<Char>}`>
   : Acc;
