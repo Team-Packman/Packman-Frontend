@@ -1,5 +1,5 @@
-import { css } from 'styled-components';
-import { normalize } from 'styled-normalize';
+import { css } from '@emotion/react';
+import normalize from 'emotion-normalize';
 
 // eslint-disable-next-line import/extensions
 import Pretendard from '@/assets/fonts/PretendardVariable.woff2';

@@ -1,10 +1,11 @@
+import { Global, ThemeProvider } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Outlet } from 'react-router';
-import { ThemeProvider } from 'styled-components';
+
+import globalStyle from '@/styles/globalStyle';
 
 import AppLayout from './components/@common/AppLayout/AppLayout';
-import GlobalStyle from './components/@common/GlobalStyle/GlobalStyle';
 import { ONE_HOUR } from './constants/time';
 import theme from './styles/theme/theme';
 import { setScreenSize } from './utils/setScreenSize';
@@ -25,9 +26,9 @@ const queryClient = new QueryClient({
 
 const App = () => (
   <ThemeProvider theme={theme}>
+    <Global styles={globalStyle} />
+    <GlobalEvent />
     <QueryClientProvider client={queryClient}>
-      <GlobalStyle />
-      <GlobalEvent />
       <AppLayout>
         <Outlet />
       </AppLayout>
@@ -39,14 +40,10 @@ export default App;
 
 const GlobalEvent = () => {
   useEffect(() => {
-    const onResize = () => {
-      setScreenSize();
-    };
-
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', setScreenSize);
 
     return () => {
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', setScreenSize);
     };
   }, []);
 
