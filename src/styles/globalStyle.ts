@@ -40,6 +40,9 @@ const globalStyle = css`
 
   button {
     cursor: pointer;
+
+    background-color: transparent;
+    border: none;
   }
 
   input,
