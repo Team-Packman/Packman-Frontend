@@ -8,7 +8,6 @@ import { media } from '@/utils/media';
 import * as Styled from './AppScreen.styles';
 
 interface AppScreenProps {
-  page: string;
   appBar?: {
     left?: ReactNode;
     title?: string | JSX.Element;
