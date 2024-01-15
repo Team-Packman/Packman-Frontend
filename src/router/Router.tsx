@@ -1,28 +1,28 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
-import App from '@/App';
 import Folders from '@/pages/Folders/Folders';
 import NotFound from '@/pages/NotFound/NotFound';
 
 import { PATH } from './routes';
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    children: [
-      {
-        index: true,
-        element: <Folders />,
-      },
-      {
-        path: PATH.EXCEPTION,
-        element: <NotFound />,
-      },
-    ],
-  },
-]);
+const AnimatePresenceRoutes = () => {
+  const location = useLocation();
 
-const Router = () => <RouterProvider router={router} />;
+  return (
+    <AnimatePresence initial={false}>
+      <Routes location={location} key={location.pathname}>
+        <Route path={PATH.FOLDERS} element={<Folders />} />
+        <Route path={PATH.EXCEPTION} element={<NotFound />} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
+const Router = () => (
+  <BrowserRouter>
+    <AnimatePresenceRoutes />
+  </BrowserRouter>
+);
 
 export default Router;

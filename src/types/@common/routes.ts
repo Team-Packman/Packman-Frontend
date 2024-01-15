@@ -1,10 +1,10 @@
+import { generatePath } from 'react-router';
+
 import { SnakeToCamel } from './utility';
 
 type PathName<T extends object> = keyof T extends string ? SnakeToCamel<keyof T> : never;
 
-type PathPram = number | string;
-
-type PathParams<T extends string> = Record<T, PathPram>;
+type PathParams<T extends string> = Parameters<typeof generatePath<T>>[1];
 
 type QueryStringProperty = {
   [key: QueryStringPropertyKey]: QueryStringPropertyValue;
@@ -29,7 +29,6 @@ export type {
   DynamicParamsToString,
   PathName,
   PathParams,
-  PathPram,
   QueryStringProperty,
   QueryStringPropertyKey,
   QueryStringPropertyValue,
