@@ -19,6 +19,7 @@
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
+    "jsxImportSource": "@emotion/react",
     "paths": {
       "@/*": ["src/*"]
     }

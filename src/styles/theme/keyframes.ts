@@ -1,7 +1,7 @@
-import { keyframes as styledKeyframes } from 'styled-components';
+import { keyframes as emotionKeyframes } from '@emotion/react';
 
 const keyframes = {
-  bottomSheetAppear: styledKeyframes`
+  bottomSheetAppear: emotionKeyframes`
    from {
       transform: translateY(100%);
     }
@@ -11,7 +11,7 @@ const keyframes = {
     }
   `,
 
-  shiny: styledKeyframes`
+  shiny: emotionKeyframes`
     0% {
         transform: scale(0) rotate(45deg);
         opacity: 0;
@@ -33,7 +33,7 @@ const keyframes = {
     }
   `,
 
-  shimmer: styledKeyframes`
+  shimmer: emotionKeyframes`
     to {
         background-position: 200% 0;
       }

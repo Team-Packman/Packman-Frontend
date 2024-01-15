@@ -1,3 +1,5 @@
+type Values<T extends object> = T[keyof T];
+
 type Separator = '_';
 
 type IsChar<Char extends string> = Uppercase<Char> extends Lowercase<Char> ? false : true;
@@ -30,4 +32,4 @@ type SnakeToCamel<
     : SnakeToCamel<Rest, `${Acc}${Lowercase<Char>}`>
   : Acc;
 
-export type { CamelToSnake, isLowercase, SnakeToCamel };
+export type { CamelToSnake, isLowercase, SnakeToCamel, Values };

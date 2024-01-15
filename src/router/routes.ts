@@ -1,18 +1,7 @@
-import type { DynamicParamsToString, PathName, PathParams } from '@/types/@common/routes';
-import type { CamelToSnake } from '@/types/@common/utility';
+import type { Values } from '@/types/@common/utility';
 
-type StaticPathName = PathName<typeof STATIC>;
-type DynamicPathName = PathName<typeof DYNAMIC>;
-
-type GetStaticPath = {
-  [K in StaticPathName]: () => (typeof STATIC)[Uppercase<CamelToSnake<K>>];
-};
-
-type GetDynamicPath = {
-  [K in DynamicPathName]: (
-    pathParams: PathParams<string>,
-  ) => DynamicParamsToString<(typeof DYNAMIC)[Uppercase<CamelToSnake<K>>]>;
-};
+type StaticPath = Values<typeof STATIC>;
+type DynamicPath = Values<typeof DYNAMIC>;
 
 const STATIC = {
   FOLDERS: '/',
@@ -20,8 +9,8 @@ const STATIC = {
 } as const;
 
 const DYNAMIC = {
-  PACKING_LIST_OVERVIEW: '/:type/overview',
-  PACKING_LIST: '/:type/packing-list',
+  PACKING_LIST_OVERVIEW: '/folders/:id',
+  PACKING_LIST: '/packing-list/:id',
 } as const;
 
 export const PATH = {
@@ -29,18 +18,4 @@ export const PATH = {
   ...DYNAMIC,
 };
 
-export const getStaticPath: GetStaticPath = {
-  folders: () => STATIC.FOLDERS,
-  exception: () => STATIC.EXCEPTION,
-};
-
-export const generateDynamicPath: GetDynamicPath = {
-  packingListOverview: ({ type }: PathParams<'type'>) => `/${type}/overview`,
-  packingList: ({ type }: PathParams<'type'>) => `/${type}/packing-list`,
-};
-
-export const routerPath = {
-  ...generateDynamicPath,
-  ...getStaticPath,
-  back: -1,
-};
+export type { DynamicPath, StaticPath };
