@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 
+import { calcZIndex } from '@/utils/calcZIndex';
+
 export const Layout = styled(motion.div)<{ page: number }>`
   position: absolute;
-  z-index: ${({ page }) => page};
+  z-index: ${({ page }) => calcZIndex(page)};
 
   width: 100%;
   max-width: 48rem;
