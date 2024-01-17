@@ -41,6 +41,8 @@ const globalStyle = css`
   button {
     cursor: pointer;
 
+    color: black;
+
     background-color: transparent;
     border: none;
   }
