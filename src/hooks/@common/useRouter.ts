@@ -3,9 +3,12 @@ import { generatePath, useNavigate } from 'react-router';
 
 import { DynamicPath, StaticPath } from '@/router/routes';
 import { PathParams } from '@/types/@common/routes';
+import { stopSwiping } from '@/utils/swipe';
 
 let prevPage = 0;
 let currentPage = 0;
+
+type FlowType = 'PUSH' | 'POP';
 
 type RouterPush = {
   (path: StaticPath, options?: { search?: unknown }): void;
@@ -18,6 +21,8 @@ export const useRouter = () => {
   const back = () => {
     currentPage -= 1;
 
+    stopSwiping();
+
     navigate(-1);
   };
 
@@ -28,6 +33,8 @@ export const useRouter = () => {
     const { params, search } = options ?? {};
 
     currentPage += 1;
+
+    stopSwiping();
 
     navigate({
       pathname: generatePath(path, params),
@@ -54,3 +61,5 @@ export const flow = {
   getFlowType,
   syncPage,
 };
+
+export type { FlowType };
