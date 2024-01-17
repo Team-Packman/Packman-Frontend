@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 
@@ -36,4 +37,22 @@ export const Title = styled.h1`
 
 export const Main = styled.main`
   min-height: calc((var(--vh, 1vh) * 100) - 5.2rem);
+`;
+
+export const SwipeBar = styled.div<{ position: 'left' | 'right' }>`
+  position: absolute;
+  z-index: ${calcZIndex(9999)};
+
+  width: 2.5rem;
+  min-height: calc((var(--vh, 1vh) * 100));
+
+  ${({ position }) =>
+    css({
+      [position]: 0,
+    })}
+`;
+
+export const BackButton = styled.button`
+  position: relative;
+  z-index: ${calcZIndex(10000)};
 `;
