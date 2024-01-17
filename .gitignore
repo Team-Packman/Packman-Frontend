@@ -5,3 +5,8 @@ dist
 .eslintcache
 
 yarn.lock
+
+.env
+.env.local
+.env.development
+.env.production
