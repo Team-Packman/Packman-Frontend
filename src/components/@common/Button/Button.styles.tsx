@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { darken } from 'polished';
 
 import { ButtonSize, ButtonType } from './Button.types';
 
@@ -7,6 +8,11 @@ export const Button = styled.button<{
   variant: ButtonType;
   size: ButtonSize;
 }>`
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
   display: flex;
   gap: 0.3rem;
   align-items: center;
@@ -16,7 +22,11 @@ export const Button = styled.button<{
 
   border-radius: 8px;
 
-  transition: 0.3s;
+  transition: 0.2s;
+
+  &:active {
+    transform: scale(0.98);
+  }
 
   ${({ theme: { typo } }) => typo.body4}
 
@@ -28,6 +38,11 @@ export const Button = styled.button<{
 
           background-color: ${color.white};
           border: 1px solid ${color.pmBlack};
+
+          &:active {
+            background-color: ${darken(0.1, color.white)};
+            border-color: ${darken(0.1, color.pmBlack)};
+          }
         `;
 
       case 'active':
@@ -36,6 +51,13 @@ export const Button = styled.button<{
 
           background-color: ${color.pmPink};
           border: 1px solid ${color.pmPink};
+
+          &:active {
+            color: ${darken(0.1, color.white)};
+
+            background-color: ${darken(0.1, color.pmPink)};
+            border-color: ${darken(0.1, color.pmPink)};
+          }
         `;
 
       case 'inactive':
