@@ -7,13 +7,11 @@ import Button from '../Button';
 const meta = {
   title: 'ui/Button',
   component: Button,
-  tags: ['autodocs'],
   argTypes: {
     icon: {
       control: {
         type: 'radio',
       },
-      description: 'Image component',
       options: ['withIcon', 'withoutIcon'],
       mapping: {
         withIcon: <img src={ShareIcon} alt="공유하기 버튼" />,
