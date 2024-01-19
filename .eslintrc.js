@@ -3,7 +3,14 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ['airbnb', 'eslint:recommended', 'plugin:react/recommended', 'plugin:react-hooks/recommended', 'plugin:@typescript-eslint/recommended', 'plugin:storybook/recommended'],
+  extends: [
+    'airbnb',
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:storybook/recommended',
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -61,6 +68,7 @@ module.exports = {
       {
         js: 'never',
         jsx: 'never',
+        types: 'always',
         styles: 'always',
         ts: 'never',
         tsx: 'never',
