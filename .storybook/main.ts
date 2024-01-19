@@ -3,6 +3,8 @@ import type { StorybookConfig } from '@storybook/react-webpack5';
 const devConfig = require('../config/webpack.dev.js');
 const prodConfig = require('../config/webpack.prod.js');
 
+const paths = require('../config/paths');
+
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
@@ -31,7 +33,15 @@ const config: StorybookConfig = {
     return {
       ...config,
       module: {
+        ...config.module,
         ...customConfig.module,
+      },
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...config.resolve?.alias,
+          '@': paths['alias@'],
+        },
       },
     };
   },
