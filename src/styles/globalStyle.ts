@@ -44,6 +44,8 @@ const globalStyle = css`
 
     background-color: transparent;
     border: none;
+
+    -webkit-tap-highlight-color: transparent;
   }
 
   input,
