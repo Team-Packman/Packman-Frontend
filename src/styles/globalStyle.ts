@@ -10,8 +10,6 @@ const globalStyle = css`
 
     box-sizing: border-box;
 
-    font-size: 62.5%;
-
     &::-webkit-scrollbar {
       width: 0;
       height: 0;
@@ -21,6 +19,7 @@ const globalStyle = css`
   html,
   body {
     font-family: Pretendard, sans-serif;
+    font-size: 62.5%;
   }
 
   a {
@@ -45,6 +44,8 @@ const globalStyle = css`
 
     background-color: transparent;
     border: none;
+
+    -webkit-tap-highlight-color: transparent;
   }
 
   input,

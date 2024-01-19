@@ -24,7 +24,7 @@ export const AppBar = styled.header`
 
   width: 100%;
   height: 5.2rem;
-  padding: 0 1.4rem;
+  padding: 0 2rem;
 `;
 
 export const Title = styled.h1`
@@ -37,6 +37,7 @@ export const Title = styled.h1`
 
 export const Main = styled.main`
   min-height: calc((var(--vh, 1vh) * 100) - 5.2rem);
+  padding: 0 2rem;
 `;
 
 export const SwipeBar = styled.div<{ position: 'left' | 'right' }>`

@@ -6,6 +6,7 @@ import { flow, FlowType, useRouter } from '@/hooks/@common/useRouter';
 import { media } from '@/utils/media';
 
 import { isSwiping, startSwiping, stopSwiping } from '../../../utils/swipe';
+import { GlobalPortal } from '../GlobalPortal';
 import * as Styled from './AppScreen.styles';
 import { useSetAppScreenWidth } from './hooks/useSetAppScreenWidth';
 
@@ -86,7 +87,9 @@ const AppScreen = (props: PropsWithChildren<AppScreenProps>) => {
         <Styled.Title>{title}</Styled.Title>
         {right}
       </Styled.AppBar>
-      <Styled.Main>{children}</Styled.Main>
+      <GlobalPortal.PortalProvider>
+        <Styled.Main>{children}</Styled.Main>
+      </GlobalPortal.PortalProvider>
     </Styled.Layout>
   );
 };
