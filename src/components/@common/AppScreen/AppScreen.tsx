@@ -23,7 +23,9 @@ type AppScreenProps = {
   };
 };
 
-const Layout = styled(motion.div)<{ page: number }>`
+type LayoutProps = { page: number };
+
+const Layout = styled(motion.div)<LayoutProps>`
   position: absolute;
   z-index: ${({ page }) => calcZIndex(page)};
 
