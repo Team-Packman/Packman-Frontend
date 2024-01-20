@@ -9,7 +9,6 @@ import globalStyle from '@/styles/globalStyle';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      suspense: true,
       retry: false,
       throwOnError: true,
       staleTime: ONE_HOUR,
