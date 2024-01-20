@@ -10,6 +10,8 @@ type TypeAProps = {
   direction?: 'row' | 'column';
 };
 
+type ButtonContainerProps = Pick<TypeAProps, 'direction'>;
+
 const Layout = styled.div`
   position: fixed;
   z-index: ${calcZIndex(10000)};
@@ -19,9 +21,7 @@ const Layout = styled.div`
   max-width: 48rem;
 `;
 
-const ButtonContainer = styled.div<{
-  direction: 'row' | 'column';
-}>`
+const ButtonContainer = styled.div<ButtonContainerProps>`
   display: flex;
 
   padding: 0 2rem 3.3rem;
