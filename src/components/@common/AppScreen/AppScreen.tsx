@@ -10,13 +10,13 @@ import { GlobalPortal } from '../GlobalPortal';
 import * as Styled from './AppScreen.styles';
 import { useSetAppScreenWidth } from './hooks/useSetAppScreenWidth';
 
-interface AppScreenProps {
+type AppScreenProps = {
   appBar?: {
     left?: ReactNode;
     title?: string | JSX.Element;
     right?: ReactNode;
   };
-}
+};
 
 const BackArrow = () => {
   const router = useRouter();
