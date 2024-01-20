@@ -13,10 +13,10 @@ const Button = (props: PropsWithChildren<ButtonProps>) => {
   const { variant = 'primary', size = 'auto', icon, children, ...restProps } = props;
 
   return (
-    <Styled.Button type="button" variant={variant} size={size} {...restProps}>
+    <Styled.Layout type="button" variant={variant} size={size} {...restProps}>
       {icon}
       {children}
-    </Styled.Button>
+    </Styled.Layout>
   );
 };
 

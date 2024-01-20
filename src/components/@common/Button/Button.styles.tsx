@@ -4,7 +4,7 @@ import { darken } from 'polished';
 
 import { ButtonSize, ButtonType } from './Button.types';
 
-export const Button = styled.button<{
+export const Layout = styled.button<{
   variant: ButtonType;
   size: ButtonSize;
 }>`
