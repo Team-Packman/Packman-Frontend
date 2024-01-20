@@ -1,0 +1,10 @@
+{
+  "styled": {
+    "prefix": "imsc",
+    "body": ["import styled from '@emotion/styled';"]
+  },
+  "styled-components": {
+    "prefix": "esc",
+    "body": ["export const ${1} = styled.${2}`", "${3}", "`;"]
+  }
+}
