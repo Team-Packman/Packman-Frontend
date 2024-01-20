@@ -28,14 +28,14 @@ type Story = StoryObj<typeof meta>;
 const ButtonTemplate: Story = {
   render: args => (
     <>
-      <Button variant="primary" {...args}>
-        PRIMARY
+      <Button variant="outlined" {...args}>
+        OUTLINED
       </Button>
-      <Button variant="active" {...args}>
+      <Button variant="contained" {...args}>
         ACTIVE
       </Button>
-      <Button variant="inactive" {...args}>
-        INACTIVE
+      <Button variant="contained" disabled {...args}>
+        DISABLED
       </Button>
     </>
   ),
