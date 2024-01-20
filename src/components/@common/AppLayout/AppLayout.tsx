@@ -1,7 +1,12 @@
-import { PropsWithChildren } from 'react';
+import styled from '@emotion/styled';
+import type { PropsWithChildren } from 'react';
 
-import * as Styled from './AppLayout.styles';
+const Layout = styled.div`
+  max-width: 48rem;
+  min-height: calc((var(--vh, 1vh) * 100));
+  margin: 0 auto;
+`;
 
-const AppLayout = ({ children }: PropsWithChildren) => <Styled.Layout>{children}</Styled.Layout>;
+const AppLayout = ({ children }: PropsWithChildren) => <Layout>{children}</Layout>;
 
 export default AppLayout;

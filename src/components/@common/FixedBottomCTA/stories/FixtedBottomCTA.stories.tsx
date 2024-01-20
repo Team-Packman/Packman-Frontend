@@ -39,7 +39,7 @@ const TypeATemplate: Story = {
   render: args => (
     <FixedBottomCTA.TypeA {...args}>
       <Button>건너뛰기</Button>
-      <Button variant="active">확인</Button>
+      <Button variant="contained">확인</Button>
     </FixedBottomCTA.TypeA>
   ),
 };
