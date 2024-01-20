@@ -1,8 +1,8 @@
 import { stringify } from 'qs';
 import { generatePath, useNavigate } from 'react-router';
 
-import { DynamicPath, StaticPath } from '@/router/routes';
-import { PathParams } from '@/types/@common/routes';
+import type { DynamicPath, StaticPath } from '@/router/routes';
+import type { PathParams } from '@/types/@common/routes';
 import { stopSwiping } from '@/utils/swipe';
 
 let prevPage = 0;
