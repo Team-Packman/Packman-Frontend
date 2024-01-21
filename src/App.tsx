@@ -12,6 +12,8 @@ import { setScreenSize } from './utils/setScreenSize';
 
 setScreenSize();
 
+console.log('jira test --2');
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
