@@ -39,6 +39,10 @@ const globalStyle = css`
 
   button {
     cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
     color: black;
 

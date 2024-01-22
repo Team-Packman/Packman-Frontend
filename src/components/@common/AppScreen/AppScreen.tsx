@@ -1,32 +1,78 @@
-import { PropsWithChildren, ReactNode, useEffect, useRef } from 'react';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { motion } from 'framer-motion';
+import type { PropsWithChildren, ReactNode } from 'react';
+import { useEffect, useRef } from 'react';
 
-import ArrowBackIcon from '@/assets/images/svg/arrow_back_icon.svg';
 import PackmanLogo from '@/assets/images/svg/packman_logo.svg';
-import { flow, FlowType, useRouter } from '@/hooks/@common/useRouter';
+import type { FlowType } from '@/hooks/@common/useRouter';
+import { flow } from '@/hooks/@common/useRouter';
+import { calcZIndex } from '@/utils/calcZIndex';
 import { media } from '@/utils/media';
 
 import { isSwiping, startSwiping, stopSwiping } from '../../../utils/swipe';
 import { GlobalPortal } from '../GlobalPortal';
-import * as Styled from './AppScreen.styles';
+import BackArrow from './components/BackArrow/BackArrow';
 import { useSetAppScreenWidth } from './hooks/useSetAppScreenWidth';
 
-interface AppScreenProps {
+type AppScreenProps = {
   appBar?: {
     left?: ReactNode;
     title?: string | JSX.Element;
     right?: ReactNode;
   };
-}
-
-const BackArrow = () => {
-  const router = useRouter();
-
-  return (
-    <Styled.BackButton type="button" onClick={router.back}>
-      <img src={ArrowBackIcon} alt="뒤로 가기 버튼" width={24} height={24} />
-    </Styled.BackButton>
-  );
 };
+
+type LayoutProps = { page: number };
+
+const Layout = styled(motion.div)<LayoutProps>`
+  position: absolute;
+  z-index: ${({ page }) => calcZIndex(page)};
+
+  width: 100%;
+  max-width: 48rem;
+  min-height: calc((var(--vh, 1vh) * 100));
+
+  background-color: ${({ theme }) => theme.color.white};
+`;
+
+const AppBar = styled.header`
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 5.2rem;
+  padding: 0 2rem;
+`;
+
+const Title = styled.h1`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
+  ${({ theme }) => theme.typo.subhead2}
+`;
+
+const Main = styled.main`
+  min-height: calc((var(--vh, 1vh) * 100) - 5.2rem);
+  padding: 0 2rem;
+`;
+
+const SwipeBar = styled.div<{ position: 'left' | 'right' }>`
+  position: absolute;
+  z-index: ${calcZIndex(9999)};
+
+  width: 2.5rem;
+  min-height: calc((var(--vh, 1vh) * 100));
+
+  ${({ position }) =>
+    css({
+      [position]: 0,
+    })}
+`;
 
 const left = <BackArrow />;
 const title = <img src={PackmanLogo} alt="팩맨 로고" />;
@@ -65,7 +111,7 @@ const AppScreen = (props: PropsWithChildren<AppScreenProps>) => {
   useEffect(stopSwiping);
 
   return (
-    <Styled.Layout
+    <Layout
       ref={appScreenRef}
       custom={{ flowType: flow.getFlowType(), appScreenWidth }}
       variants={media.isMobileSize() ? flowVariants : undefined}
@@ -80,17 +126,17 @@ const AppScreen = (props: PropsWithChildren<AppScreenProps>) => {
         damping: 30,
       }}
     >
-      <Styled.SwipeBar position="left" onTouchMove={startSwiping} />
-      <Styled.SwipeBar position="right" onTouchMove={startSwiping} />
-      <Styled.AppBar>
+      <SwipeBar position="left" onTouchMove={startSwiping} />
+      <SwipeBar position="right" onTouchMove={startSwiping} />
+      <AppBar>
         {left}
-        <Styled.Title>{title}</Styled.Title>
+        <Title>{title}</Title>
         {right}
-      </Styled.AppBar>
+      </AppBar>
       <GlobalPortal.PortalProvider>
-        <Styled.Main>{children}</Styled.Main>
+        <Main>{children}</Main>
       </GlobalPortal.PortalProvider>
-    </Styled.Layout>
+    </Layout>
   );
 };
 
