@@ -47,7 +47,7 @@ export const useRouter = () => {
 
 const getCurrentPage = () => currentPage;
 
-const getPrevPage = () => currentPage;
+const getPrevPage = () => prevPage;
 
 const getFlowType = () => (prevPage < currentPage ? 'PUSH' : 'POP');
 
