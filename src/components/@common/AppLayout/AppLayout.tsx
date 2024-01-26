@@ -1,5 +1,10 @@
 import styled from '@emotion/styled';
 import type { PropsWithChildren } from 'react';
+import { useState } from 'react';
+
+import { useRefCallback } from '@/hooks/@common/useRefCallback';
+
+import { AppLayoutContext } from './context/AppLayoutContext';
 
 const Layout = styled.div`
   max-width: 48rem;
@@ -7,6 +12,22 @@ const Layout = styled.div`
   margin: 0 auto;
 `;
 
-const AppLayout = ({ children }: PropsWithChildren) => <Layout>{children}</Layout>;
+const AppLayout = ({ children }: PropsWithChildren) => {
+  const [appScreenWidth, setAppScreenWidth] = useState(0);
+
+  const appLayoutCallbackRef = useRefCallback();
+
+  return (
+    <AppLayoutContext.Provider value={appScreenWidth}>
+      <Layout
+        ref={appLayoutCallbackRef(instance =>
+          setAppScreenWidth(appScreenWidth || instance.clientWidth),
+        )}
+      >
+        {children}
+      </Layout>
+    </AppLayoutContext.Provider>
+  );
+};
 
 export default AppLayout;

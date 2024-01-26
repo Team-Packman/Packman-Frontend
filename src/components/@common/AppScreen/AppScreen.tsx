@@ -5,15 +5,14 @@ import type { PropsWithChildren, ReactNode } from 'react';
 import { useEffect, useRef } from 'react';
 
 import PackmanLogo from '@/assets/images/svg/packman_logo.svg';
-import type { FlowType } from '@/hooks/@common/useRouter';
 import { flow } from '@/hooks/@common/useRouter';
 import { calcZIndex } from '@/utils/calcZIndex';
 import { media } from '@/utils/media';
 
 import { isSwiping, startSwiping, stopSwiping } from '../../../utils/swipe';
+import { useAppLayoutContext } from '../AppLayout/context/AppLayoutContext';
 import { GlobalPortal } from '../GlobalPortal';
 import BackArrow from './components/BackArrow/BackArrow';
-import { useSetAppScreenWidth } from './hooks/useSetAppScreenWidth';
 
 type AppScreenProps = {
   appBar?: {
@@ -81,17 +80,17 @@ const right = null;
 const defaultAppBar = { left, title, right };
 
 const flowVariants = {
-  enter: ({ flowType, appScreenWidth }: { flowType: FlowType; appScreenWidth: number }) => ({
+  enter: (appScreenWidth: number) => ({
     ...(!isSwiping() && {
-      x: flowType === 'PUSH' ? appScreenWidth : (appScreenWidth / 4) * -1,
+      x: flow.getFlowType() === 'PUSH' ? appScreenWidth : (appScreenWidth / 4) * -1,
     }),
   }),
   center: {
     x: 0,
   },
-  exit: ({ flowType, appScreenWidth }: { flowType: FlowType; appScreenWidth: number }) => ({
+  exit: (appScreenWidth: number) => ({
     ...(!isSwiping() && {
-      x: flowType === 'POP' ? appScreenWidth : (appScreenWidth / 4) * -1,
+      x: flow.getFlowType() === 'POP' ? appScreenWidth : (appScreenWidth / 4) * -1,
     }),
   }),
 };
@@ -104,7 +103,7 @@ const AppScreen = (props: PropsWithChildren<AppScreenProps>) => {
     right = defaultAppBar.right,
   } = appBar;
 
-  const { appScreenRef, appScreenWidth } = useSetAppScreenWidth();
+  const appScreenWidth = useAppLayoutContext();
 
   const currentPage = useRef<number>(flow.getCurrentPage()).current;
 
@@ -112,8 +111,7 @@ const AppScreen = (props: PropsWithChildren<AppScreenProps>) => {
 
   return (
     <Layout
-      ref={appScreenRef}
-      custom={{ flowType: flow.getFlowType(), appScreenWidth }}
+      custom={appScreenWidth}
       variants={media.isMobileSize() ? flowVariants : undefined}
       initial="enter"
       animate="center"
