@@ -19,11 +19,7 @@ const AppLayout = ({ children }: PropsWithChildren) => {
 
   return (
     <AppLayoutContext.Provider value={appScreenWidth}>
-      <Layout
-        ref={appLayoutCallbackRef(instance =>
-          setAppScreenWidth(appScreenWidth || instance.clientWidth),
-        )}
-      >
+      <Layout ref={appLayoutCallbackRef(instance => setAppScreenWidth(instance.clientWidth))}>
         {children}
       </Layout>
     </AppLayoutContext.Provider>
