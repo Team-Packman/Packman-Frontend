@@ -49,7 +49,13 @@ const getCurrentPage = () => currentPage;
 
 const getPrevPage = () => prevPage;
 
-const getFlowType = () => (prevPage < currentPage ? 'PUSH' : 'POP');
+const getFlowType = () => {
+  if (prevPage === currentPage) return 'IDLE';
+
+  if (prevPage < currentPage) return 'PUSH';
+
+  if (prevPage > currentPage) return 'POP';
+};
 
 const syncPage = () => {
   prevPage = currentPage;
