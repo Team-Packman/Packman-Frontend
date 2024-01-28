@@ -110,13 +110,29 @@ const AppScreen = (props: PropsWithChildren<AppScreenProps>) => {
 
   const { startSwiping, stopAnimating } = screenActions();
 
+  /** @todo 애니메이션 적용 논의 */
+  const variants = undefined;
+  // const variants = media.isMobileSize() ? flowVariants : undefined
+
+  const syncPageAndAnimationState = (type: 'exit' | 'center') => {
+    if (flow.getFlowType() === 'PUSH' && type === 'exit') {
+      flow.syncPage();
+      stopAnimating();
+    }
+
+    if (flow.getFlowType() === 'POP' && type === 'center') {
+      flow.syncPage();
+      stopAnimating();
+    }
+  };
+
   useEffect(stopAnimating);
 
   return (
     <Layout
       page={currentPage}
       custom={appScreenWidth}
-      variants={media.isMobileSize() ? flowVariants : undefined}
+      variants={variants}
       initial="enter"
       animate="center"
       exit="exit"
@@ -125,17 +141,7 @@ const AppScreen = (props: PropsWithChildren<AppScreenProps>) => {
         stiffness: 250,
         damping: 30,
       }}
-      onAnimationComplete={type => {
-        if (flow.getFlowType() === 'PUSH' && type === 'exit') {
-          flow.syncPage();
-          stopAnimating();
-        }
-
-        if (flow.getFlowType() === 'POP' && type === 'center') {
-          flow.syncPage();
-          stopAnimating();
-        }
-      }}
+      onAnimationComplete={syncPageAndAnimationState}
     >
       <SwipeBar position="left" onTouchMove={startSwiping} />
       <SwipeBar position="right" onTouchMove={startSwiping} />

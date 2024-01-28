@@ -6,7 +6,7 @@ import { screenActions, screenStore } from '@/store/screenStore';
 import type { PathParams } from '@/types/@common/routes';
 
 let prevPage = 0;
-let currentPage = 0;
+const currentPage = 0;
 
 type FlowType = 'PUSH' | 'POP';
 
@@ -15,20 +15,21 @@ type RouterPush = {
   <T extends DynamicPath>(path: T, options: { params: PathParams<T>; search?: unknown }): void;
 };
 
-const { startAnimating, stopSwiping } = screenActions();
-
 export const useRouter = () => {
   const navigate = useNavigate();
 
+  const { startAnimating, stopSwiping } = screenActions();
+
   const back = () => {
-    const { isAnimating } = screenStore.getState();
+    /** @todo 애니메이션 적용 논의 */
+    // const { isAnimating } = screenStore.getState();
 
-    if (isAnimating) return;
+    // if (isAnimating) return;
 
-    currentPage -= 1;
+    // currentPage -= 1;
 
-    startAnimating();
-    stopSwiping();
+    // startAnimating();
+    // stopSwiping();
 
     navigate(-1);
   };
@@ -39,14 +40,15 @@ export const useRouter = () => {
   ) => {
     const { params, search } = options ?? {};
 
-    const { isAnimating } = screenStore.getState();
+    /** @todo 애니메이션 적용 논의 */
+    // const { isAnimating } = screenStore.getState();
 
-    if (isAnimating) return;
+    // if (isAnimating) return;
 
-    currentPage += 1;
+    // currentPage += 1;
 
-    startAnimating();
-    stopSwiping();
+    // startAnimating();
+    // stopSwiping();
 
     navigate({
       pathname: generatePath(path, params),
