@@ -2,11 +2,11 @@ import { stringify } from 'qs';
 import { generatePath, useNavigate } from 'react-router';
 
 import type { DynamicPath, StaticPath } from '@/router/routes';
+import { screenActions, screenStore } from '@/store/screenStore';
 import type { PathParams } from '@/types/@common/routes';
-import { stopSwiping } from '@/utils/swipe';
 
 let prevPage = 0;
-let currentPage = 0;
+const currentPage = 0;
 
 type FlowType = 'PUSH' | 'POP';
 
@@ -18,10 +18,18 @@ type RouterPush = {
 export const useRouter = () => {
   const navigate = useNavigate();
 
-  const back = () => {
-    currentPage -= 1;
+  const { startAnimating, stopSwiping } = screenActions();
 
-    stopSwiping();
+  const back = () => {
+    /** @todo 애니메이션 적용 논의 */
+    // const { isAnimating } = screenStore.getState();
+
+    // if (isAnimating) return;
+
+    // currentPage -= 1;
+
+    // startAnimating();
+    // stopSwiping();
 
     navigate(-1);
   };
@@ -32,9 +40,15 @@ export const useRouter = () => {
   ) => {
     const { params, search } = options ?? {};
 
-    currentPage += 1;
+    /** @todo 애니메이션 적용 논의 */
+    // const { isAnimating } = screenStore.getState();
 
-    stopSwiping();
+    // if (isAnimating) return;
+
+    // currentPage += 1;
+
+    // startAnimating();
+    // stopSwiping();
 
     navigate({
       pathname: generatePath(path, params),
@@ -47,9 +61,15 @@ export const useRouter = () => {
 
 const getCurrentPage = () => currentPage;
 
-const getPrevPage = () => currentPage;
+const getPrevPage = () => prevPage;
 
-const getFlowType = () => (prevPage < currentPage ? 'PUSH' : 'POP');
+const getFlowType = () => {
+  if (prevPage === currentPage) return 'IDLE';
+
+  if (prevPage < currentPage) return 'PUSH';
+
+  if (prevPage > currentPage) return 'POP';
+};
 
 const syncPage = () => {
   prevPage = currentPage;

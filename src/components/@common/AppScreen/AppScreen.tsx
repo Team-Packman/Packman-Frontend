@@ -5,15 +5,14 @@ import type { PropsWithChildren, ReactNode } from 'react';
 import { useEffect, useRef } from 'react';
 
 import PackmanLogo from '@/assets/images/svg/packman_logo.svg';
-import type { FlowType } from '@/hooks/@common/useRouter';
 import { flow } from '@/hooks/@common/useRouter';
+import { screenActions, screenStore } from '@/store/screenStore';
 import { calcZIndex } from '@/utils/calcZIndex';
 import { media } from '@/utils/media';
 
-import { isSwiping, startSwiping, stopSwiping } from '../../../utils/swipe';
+import { useAppLayoutContext } from '../AppLayout/context/AppLayoutContext';
 import { GlobalPortal } from '../GlobalPortal';
 import BackArrow from './components/BackArrow/BackArrow';
-import { useSetAppScreenWidth } from './hooks/useSetAppScreenWidth';
 
 type AppScreenProps = {
   appBar?: {
@@ -81,17 +80,18 @@ const right = null;
 const defaultAppBar = { left, title, right };
 
 const flowVariants = {
-  enter: ({ flowType, appScreenWidth }: { flowType: FlowType; appScreenWidth: number }) => ({
-    ...(!isSwiping() && {
-      x: flowType === 'PUSH' ? appScreenWidth : (appScreenWidth / 4) * -1,
+  enter: (appScreenWidth: number) => ({
+    ...(!screenStore.getState().isSwiping && {
+      x: flow.getFlowType() === 'PUSH' ? appScreenWidth : (appScreenWidth / 4) * -1,
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     }),
   }),
   center: {
     x: 0,
   },
-  exit: ({ flowType, appScreenWidth }: { flowType: FlowType; appScreenWidth: number }) => ({
-    ...(!isSwiping() && {
-      x: flowType === 'POP' ? appScreenWidth : (appScreenWidth / 4) * -1,
+  exit: (appScreenWidth: number) => ({
+    ...(!screenStore.getState().isSwiping && {
+      x: flow.getFlowType() === 'POP' ? appScreenWidth : (appScreenWidth / 4) * -1,
     }),
   }),
 };
@@ -104,27 +104,44 @@ const AppScreen = (props: PropsWithChildren<AppScreenProps>) => {
     right = defaultAppBar.right,
   } = appBar;
 
-  const { appScreenRef, appScreenWidth } = useSetAppScreenWidth();
+  const appScreenWidth = useAppLayoutContext();
 
   const currentPage = useRef<number>(flow.getCurrentPage()).current;
 
-  useEffect(stopSwiping);
+  const { startSwiping, stopAnimating } = screenActions();
+
+  /** @todo 애니메이션 적용 논의 */
+  const variants = undefined;
+  // const variants = media.isMobileSize() ? flowVariants : undefined
+
+  const syncPageAndAnimationState = (type: 'exit' | 'center') => {
+    if (flow.getFlowType() === 'PUSH' && type === 'exit') {
+      flow.syncPage();
+      stopAnimating();
+    }
+
+    if (flow.getFlowType() === 'POP' && type === 'center') {
+      flow.syncPage();
+      stopAnimating();
+    }
+  };
+
+  useEffect(stopAnimating);
 
   return (
     <Layout
-      ref={appScreenRef}
-      custom={{ flowType: flow.getFlowType(), appScreenWidth }}
-      variants={media.isMobileSize() ? flowVariants : undefined}
+      page={currentPage}
+      custom={appScreenWidth}
+      variants={variants}
       initial="enter"
       animate="center"
       exit="exit"
-      onAnimationComplete={flow.syncPage}
-      page={currentPage}
       transition={{
         type: 'spring',
         stiffness: 250,
         damping: 30,
       }}
+      onAnimationComplete={syncPageAndAnimationState}
     >
       <SwipeBar position="left" onTouchMove={startSwiping} />
       <SwipeBar position="right" onTouchMove={startSwiping} />

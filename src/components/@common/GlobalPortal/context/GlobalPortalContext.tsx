@@ -1,21 +1,23 @@
-import { createContext, PropsWithChildren, useState } from 'react';
+import type { PropsWithChildren } from 'react';
+import { createContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-const GlobalPortalContext = createContext<HTMLDivElement | null>(null);
+import { useRefCallback } from '@/hooks/@common/useRefCallback';
+
+const GlobalPortalContext = createContext<HTMLElement | null>(null);
 
 export const GlobalPortalProvider = ({ children }: PropsWithChildren) => {
-  const [portalContainerRef, setPortalContainerRef] = useState<HTMLDivElement | null>(null);
+  const [portalContainerRef, setPortalContainerRef] = useState<HTMLElement | null>(null);
+
+  const portalContainerRefCallback = useRefCallback();
 
   return (
     <GlobalPortalContext.Provider value={portalContainerRef}>
       {children}
       <div
-        id="portal-container"
-        ref={instance => {
-          if (portalContainerRef || instance) {
-            setPortalContainerRef(instance);
-          }
-        }}
+        ref={portalContainerRefCallback(
+          instance => !portalContainerRef && setPortalContainerRef(instance),
+        )}
       />
     </GlobalPortalContext.Provider>
   );
