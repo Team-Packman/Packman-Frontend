@@ -2,8 +2,8 @@ import { stringify } from 'qs';
 import { generatePath, useNavigate } from 'react-router';
 
 import type { DynamicPath, StaticPath } from '@/router/routes';
+import { screenActions, screenStore } from '@/store/screenStore';
 import type { PathParams } from '@/types/@common/routes';
-import { stopSwiping } from '@/utils/swipe';
 
 let prevPage = 0;
 let currentPage = 0;
@@ -15,12 +15,19 @@ type RouterPush = {
   <T extends DynamicPath>(path: T, options: { params: PathParams<T>; search?: unknown }): void;
 };
 
+const { startAnimating, stopSwiping } = screenActions();
+
 export const useRouter = () => {
   const navigate = useNavigate();
 
   const back = () => {
+    const { isAnimating } = screenStore.getState();
+
+    if (isAnimating) return;
+
     currentPage -= 1;
 
+    startAnimating();
     stopSwiping();
 
     navigate(-1);
@@ -32,8 +39,13 @@ export const useRouter = () => {
   ) => {
     const { params, search } = options ?? {};
 
+    const { isAnimating } = screenStore.getState();
+
+    if (isAnimating) return;
+
     currentPage += 1;
 
+    startAnimating();
     stopSwiping();
 
     navigate({

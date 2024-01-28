@@ -6,10 +6,10 @@ import { useEffect, useRef } from 'react';
 
 import PackmanLogo from '@/assets/images/svg/packman_logo.svg';
 import { flow } from '@/hooks/@common/useRouter';
+import { screenActions, screenStore } from '@/store/screenStore';
 import { calcZIndex } from '@/utils/calcZIndex';
 import { media } from '@/utils/media';
 
-import { isSwiping, startSwiping, stopSwiping } from '../../../utils/swipe';
 import { useAppLayoutContext } from '../AppLayout/context/AppLayoutContext';
 import { GlobalPortal } from '../GlobalPortal';
 import BackArrow from './components/BackArrow/BackArrow';
@@ -81,15 +81,16 @@ const defaultAppBar = { left, title, right };
 
 const flowVariants = {
   enter: (appScreenWidth: number) => ({
-    ...(!isSwiping() && {
+    ...(!screenStore.getState().isSwiping && {
       x: flow.getFlowType() === 'PUSH' ? appScreenWidth : (appScreenWidth / 4) * -1,
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
     }),
   }),
   center: {
     x: 0,
   },
   exit: (appScreenWidth: number) => ({
-    ...(!isSwiping() && {
+    ...(!screenStore.getState().isSwiping && {
       x: flow.getFlowType() === 'POP' ? appScreenWidth : (appScreenWidth / 4) * -1,
     }),
   }),
@@ -107,21 +108,33 @@ const AppScreen = (props: PropsWithChildren<AppScreenProps>) => {
 
   const currentPage = useRef<number>(flow.getCurrentPage()).current;
 
-  useEffect(stopSwiping);
+  const { startSwiping, stopAnimating } = screenActions();
+
+  useEffect(stopAnimating);
 
   return (
     <Layout
+      page={currentPage}
       custom={appScreenWidth}
       variants={media.isMobileSize() ? flowVariants : undefined}
       initial="enter"
       animate="center"
       exit="exit"
-      onAnimationComplete={flow.syncPage}
-      page={currentPage}
       transition={{
         type: 'spring',
         stiffness: 250,
         damping: 30,
+      }}
+      onAnimationComplete={type => {
+        if (flow.getFlowType() === 'PUSH' && type === 'exit') {
+          flow.syncPage();
+          stopAnimating();
+        }
+
+        if (flow.getFlowType() === 'POP' && type === 'center') {
+          flow.syncPage();
+          stopAnimating();
+        }
       }}
     >
       <SwipeBar position="left" onTouchMove={startSwiping} />
