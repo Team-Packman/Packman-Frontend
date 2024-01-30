@@ -8,8 +8,15 @@ startWorker();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
-root.render(
-  <React.StrictMode>
+const { STRICT_MODE } = process.env;
+
+const Packman =
+  STRICT_MODE === 'on' ? (
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  ) : (
     <App />
-  </React.StrictMode>,
-);
+  );
+
+root.render(Packman);
