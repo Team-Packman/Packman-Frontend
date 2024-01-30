@@ -58,7 +58,7 @@
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "html-webpack-plugin": "^5.5.3",
     "husky": ">=7",
-    "lint-staged": ">=10",
+    "lint-staged": "^15.2.0",
     "msw": "^1.2.3",
     "msw-storybook-addon": "^1.8.0",
     "postcss": "^8.4.31",
