@@ -9,8 +9,8 @@
 
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.fixAll.stylelint": true
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
   },
   "stylelint.validate": ["css", "less", "postcss", "typescript", "typescriptreact"],
   "stylelint.config": null,
