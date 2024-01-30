@@ -2,10 +2,10 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "type-check:watch": "yarn type-check --watch",
-    "start:dev": "cross-env NODE_ENV=development MSW=on Local=on STRICT_MODE=on webpack serve --config config/webpack.dev.js",
+    "start:dev": "cross-env NODE_ENV=development MSW=on Local=on webpack serve --config config/webpack.dev.js",
     "start:prod": "yarn build:prod && serve -s dist",
     "build:prod": "cross-env NODE_ENV=production webpack --progress --config config/webpack.prod.js",
-    "build:dev": "cross-env NODE_ENV=development STRICT_MODE=off webpack --progress --config config/webpack.dev.js",
+    "build:dev": "cross-env NODE_ENV=development webpack --progress --config config/webpack.dev.js",
     "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
