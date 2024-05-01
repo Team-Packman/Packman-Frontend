@@ -100,5 +100,6 @@
       "eslint --cache --fix",
       "prettier --write"
     ]
-  }
+  },
+  "packageManager": "yarn@4.1.1"
 }
