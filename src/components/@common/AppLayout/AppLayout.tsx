@@ -12,6 +12,7 @@ const Layout = styled.div`
   margin: 0 auto;
 `;
 
+/** @deprecated */
 const AppLayout = ({ children }: PropsWithChildren) => {
   const [appScreenWidth, setAppScreenWidth] = useState(0);
 

@@ -1,4 +1,4 @@
-import theme from '@/styles/theme/theme';
+import type theme from '@/app/styles/theme/theme';
 
 type CustomTheme = typeof theme;
 

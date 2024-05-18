@@ -96,6 +96,7 @@ const flowVariants = {
   }),
 };
 
+/** @deprecated */
 const AppScreen = (props: PropsWithChildren<AppScreenProps>) => {
   const { children, appBar = defaultAppBar } = props;
   const {

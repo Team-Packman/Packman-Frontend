@@ -1,7 +1,7 @@
 import { stringify } from 'qs';
 import { generatePath, useNavigate } from 'react-router';
 
-import type { DynamicPath, StaticPath } from '@/router/routes';
+import type { DynamicPath, StaticPath } from '@/app/router/routes';
 import { screenActions, screenStore } from '@/store/screenStore';
 import type { PathParams } from '@/types/@common/routes';
 
