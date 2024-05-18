@@ -1,3 +1,5 @@
-const Folders = () => <div>Folders</div>;
+import DnDTree from '@/components/@common/DnDTree/DnDTree';
+
+const Folders = () => <DnDTree />;
 
 export default Folders;
