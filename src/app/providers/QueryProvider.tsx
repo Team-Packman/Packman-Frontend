@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { PropsWithChildren } from 'react';
 
-import { ONE_HOUR } from '@/constants/time';
+import { ONE_HOUR } from '@/shared/constants/time';
 
 const QueryProvider = ({ children }: PropsWithChildren) => {
   const queryClient = new QueryClient({

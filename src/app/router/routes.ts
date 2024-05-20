@@ -1,4 +1,4 @@
-import type { Values } from '@/types/@common/utility';
+import type { Values } from '@/shared/types/utility';
 
 type StaticPath = Values<typeof STATIC>;
 type DynamicPath = Values<typeof DYNAMIC>;
@@ -13,9 +13,11 @@ const DYNAMIC = {
   PACKING_LIST: '/packing-list/:id',
 } as const;
 
-export const PATH = {
+const PATH = {
   ...STATIC,
   ...DYNAMIC,
 };
+
+export { PATH };
 
 export type { DynamicPath, StaticPath };

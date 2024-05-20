@@ -1,5 +1,10 @@
-import DnDTree from '@/components/@common/DnDTree/DnDTree';
+import AppScreen from '@/shared/ui/AppScreen/AppScreen';
+import DnDTree from '@/shared/ui/DnDTree/DnDTree';
 
-const Folders = () => <DnDTree />;
+const Folders = () => (
+  <AppScreen>
+    <DnDTree />
+  </AppScreen>
+);
 
 export default Folders;

@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import normalize from 'emotion-normalize';
 
 // eslint-disable-next-line import/extensions
-import Pretendard from '@/assets/fonts/PretendardVariable.woff2';
+import Pretendard from '@/shared/assets/fonts/PretendardVariable.woff2';
 
 const globalStyle = css`
   * {

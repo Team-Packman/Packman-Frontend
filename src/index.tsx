@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import App from './app/App';
-import { startWorker } from './mocks/worker';
+import { startWorker } from './shared/mocks/worker';
 
 startWorker();
 

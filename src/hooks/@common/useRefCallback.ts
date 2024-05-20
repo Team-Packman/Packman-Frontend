@@ -1,4 +1,4 @@
-export const useRefCallback = () => {
+const useRefCallback = () => {
   const refCallback =
     (callback: (instance: HTMLElement) => void) => (instance: HTMLElement | null) => {
       instance && callback(instance);
@@ -6,3 +6,5 @@ export const useRefCallback = () => {
 
   return refCallback;
 };
+
+export { useRefCallback };

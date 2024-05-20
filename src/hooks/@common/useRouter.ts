@@ -2,8 +2,8 @@ import { stringify } from 'qs';
 import { generatePath, useNavigate } from 'react-router';
 
 import type { DynamicPath, StaticPath } from '@/app/router/routes';
-import { screenActions, screenStore } from '@/store/screenStore';
-import type { PathParams } from '@/types/@common/routes';
+import { screenActions, screenStore } from '@/shared/store/screenStore';
+import type { PathParams } from '@/shared/types/routes';
 
 let prevPage = 0;
 const currentPage = 0;
@@ -15,7 +15,7 @@ type RouterPush = {
   <T extends DynamicPath>(path: T, options: { params: PathParams<T>; search?: unknown }): void;
 };
 
-export const useRouter = () => {
+const useRouter = () => {
   const navigate = useNavigate();
 
   const { startAnimating, stopSwiping } = screenActions();
@@ -75,11 +75,13 @@ const syncPage = () => {
   prevPage = currentPage;
 };
 
-export const flow = {
+const flow = {
   getCurrentPage,
   getPrevPage,
   getFlowType,
   syncPage,
 };
+
+export { flow, useRouter };
 
 export type { FlowType };
