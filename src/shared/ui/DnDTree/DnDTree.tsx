@@ -1,7 +1,6 @@
 import type {
   ItemId,
   RenderItemParams,
-  TreeData,
   TreeDestinationPosition,
   TreeItem,
   TreeSourcePosition,
@@ -13,199 +12,69 @@ import { useLayoutEffect, useState } from 'react';
 
 import HamburgerIcon from '@/shared/assets/images/svg/hamburger_icon.svg';
 
-interface Node {
-  id: string;
-  title: string;
-  type: string;
-  parent: string | null;
-}
+import { buildTree } from './model/buildTree';
 
-const nodes = [
+type Common = {
+  id: number;
+  name: string;
+  parent: number | null;
+  type: 'category' | 'pack';
+};
+
+type Category = {
+  totalCnt: number;
+  checkedCnt: number;
+} & Common;
+
+type Pack = {
+  isChecked: boolean;
+} & Common;
+
+const categories: Category[] = [
   {
-    id: '1',
-    title: 'GENERAL',
-    type: 'section',
+    id: 11,
+    name: '기본',
+    totalCnt: 4,
+    checkedCnt: 2,
+    type: 'category',
     parent: null,
   },
   {
-    id: '2',
-    title: 'Values',
-    // icon: '🏢',
-    type: 'doc',
-    parent: '1',
-  },
-  {
-    id: '3',
-    title: 'Communication',
-    // icon: '💬',
-    type: 'doc',
-    parent: '2',
-  },
-  {
-    id: '4',
-    title: 'Remote',
-    // icon: '📄',
-    type: 'doc',
-    parent: '2',
-  },
-  {
-    id: '5',
-    title: 'Expectations',
-    // icon: '🛠',
-    type: 'doc',
-    parent: '4',
-  },
-  {
-    id: '6',
-    title: 'Working Async',
-    // icon: '🔄',
-    type: 'doc',
-    parent: '4',
-  },
-  {
-    id: '7',
-    title: 'Glossary',
-    // icon: '🔗',
-    type: 'doc',
-    parent: '4',
-  },
-  {
-    id: '8',
-    title: 'PEOPLE',
-    type: 'section',
+    id: 12,
+    name: '전자기기',
+    totalCnt: 4,
+    checkedCnt: 2,
+    type: 'category',
     parent: null,
-  },
-  {
-    id: '9',
-    title: 'OTHER',
-    type: 'section',
-    parent: null,
-  },
-  {
-    id: '10',
-    title: 'Swag',
-    // icon: '🗳',
-    type: 'doc',
-    parent: '9',
-  },
-  {
-    id: '11',
-    title: 'A better remote work setup',
-    // icon: '🖥',
-    type: 'doc',
-    parent: '9',
-  },
-  {
-    id: '12',
-    title: 'Todo list for remote teams',
-    // icon: '☎️',
-    type: 'doc',
-    parent: '9',
-  },
-];
-const nodes2 = [
-  {
-    id: 'section-1',
-    title: '기본',
-    type: 'section',
-    parent: null,
-  },
-  {
-    id: 'doc-2',
-    title: '마우스 맥북',
-    // icon: '🏢',
-    type: 'doc',
-    parent: 'section-1',
-  },
-  {
-    id: 'doc-3',
-    title: '에어팟 맥스',
-    // icon: '💬',
-    type: 'doc',
-    parent: 'section-1',
-  },
-  {
-    id: 'doc-4',
-    title: '머그컵 아이폰',
-    // icon: '📄',
-    type: 'doc',
-    parent: 'section-1',
-  },
-  {
-    id: 'doc-5',
-    title: '동전지갑',
-    // icon: '🛠',
-    type: 'doc',
-    parent: 'section-1',
-  },
-  {
-    id: 'section-8',
-    title: '전자기기',
-    type: 'section',
-    parent: null,
-  },
-  {
-    id: 'doc-10',
-    title: '핸드폰 충전기',
-    // icon: '🗳',
-    type: 'doc',
-    parent: 'section-8',
-  },
-  {
-    id: 'doc-11',
-    title: '애플워치',
-    // icon: '🖥',
-    type: 'doc',
-    parent: 'section-8',
-  },
-  {
-    id: 'doc-12',
-    title: '아이패드',
-    // icon: '☎️',
-    type: 'doc',
-    parent: 'section-8',
   },
 ];
 
-export function toTree(nodes: Node[]): TreeData {
-  const rootId = '0';
-  const node2item = (node: Node) => buildItem(node.id, node, parentMap.get(node.id) || []);
-  const buildItem = (id: string, data: unknown, children: string[]): TreeItem => ({
-    id,
-    children,
-    hasChildren: children.length > 0,
-    isExpanded: true,
-    data,
-  });
+const packs: Pack[] = [
+  {
+    id: 1,
+    name: '맥북',
+    isChecked: true,
+    parent: 11,
+    type: 'pack',
+  },
+  {
+    id: 2,
+    name: '아이폰',
+    isChecked: false,
+    parent: 11,
+    type: 'pack',
+  },
+];
 
-  const parentMap = new Map<string, string[]>();
-
-  nodes.forEach(node => {
-    const parent = node.parent || rootId;
-    const children = parentMap.get(parent) || [];
-    parentMap.set(parent, children.concat([node.id]));
-  });
-
-  const root = buildItem(rootId, {}, parentMap.get(rootId)!);
-
-  return {
-    rootId: 0,
-    items: {
-      [root.id]: root,
-      ...nodes.reduce((acc, i) => Object.assign(acc, { [i.id]: node2item(i) }), {}),
-    },
-  };
-}
-
-export const dataTree = toTree(nodes2);
+const ROOT_ID = 'ROOT';
 
 const MainContainer = styled.div<{ alignSections?: boolean }>`
   display: flex;
 
   margin: 0.1rem;
 
-  .section {
-    padding-left: ${props => (props.alignSections ? '40px' : '20px')};
+  .category {
+    padding-left: ${props => (props.alignSections ? '4rem' : '2rem')};
   }
 `;
 
@@ -219,7 +88,7 @@ const TreeContainer = styled.div`
   min-height: 500px;
 `;
 
-const ItemWrapper = styled.article<{ dragging?: boolean; itemType?: 'section' | 'doc' }>`
+const ItemWrapper = styled.article<{ dragging?: boolean; itemType?: Common['type'] }>`
   width: 100%;
   min-width: 300px;
 
@@ -235,7 +104,7 @@ const ItemWrapper = styled.article<{ dragging?: boolean; itemType?: 'section' | 
       `;
     }
 
-    if (itemType === 'section') {
+    if (itemType === 'category') {
       return css`
         margin-top: 1.2rem;
 
@@ -245,13 +114,13 @@ const ItemWrapper = styled.article<{ dragging?: boolean; itemType?: 'section' | 
       `;
     }
 
-    if (itemType === 'doc') {
+    if (itemType === 'pack') {
       return css`
         border-right: 1px solid #f7f8f9;
         border-left: 1px solid #f7f8f9;
 
         /* @description 각 카테고리의 마지막 아이템(마지막 카테고리의 마지막 아이템 제외) */
-        &:has(+ .sectiontest),
+        &:has(+ .category),
         /* @description 마지막 카테고리의 마지막 아이템 */
         &:last-child {
           border-bottom: 1px solid #f7f8f9;
@@ -287,9 +156,10 @@ const Icon = styled.span`
   margin-right: 0.6rem;
 `;
 
+/** @TODO zod - item validation */
 const Item = ({ item, onExpand, onCollapse, provided, snapshot }: RenderItemParams) => {
   const toggle = item.isExpanded ? onCollapse : onExpand;
-  const onClick = item.data.type === 'section' ? toggle : () => {};
+  const expand = item.data.type === 'category' ? () => toggle(item.id) : () => {};
 
   useLayoutEffect(() => {
     if (!item.isExpanded && item.hasChildren) {
@@ -303,10 +173,8 @@ const Item = ({ item, onExpand, onCollapse, provided, snapshot }: RenderItemPara
       {...provided.draggableProps}
       itemType={item.data.type}
       dragging={snapshot.isDragging}
-      className={`${item.data.type}test`}
-      onClick={() => {
-        onClick(item.id);
-      }}
+      className={`${item.data.type}`}
+      onClick={expand}
     >
       <ItemContainer
         dragging={snapshot.isDragging}
@@ -315,7 +183,7 @@ const Item = ({ item, onExpand, onCollapse, provided, snapshot }: RenderItemPara
       >
         <Carat item={item} onExpand={onExpand} onCollapse={onCollapse} />
         {item.data.icon && <Icon>{item.data.icon}</Icon>}
-        {item.data.title}
+        {item.data.name}
 
         <img
           src={HamburgerIcon}
@@ -331,7 +199,7 @@ const Item = ({ item, onExpand, onCollapse, provided, snapshot }: RenderItemPara
 const CaratBtn = styled.div<{ isExpanded?: boolean }>`
   cursor: pointer;
 
-  transform: ${props => (!props.isExpanded ? 'rotate(-90deg)' : 1)};
+  transform: ${({ isExpanded }) => (isExpanded ? 1 : 'rotate(-90deg)')};
 
   width: 20px;
   height: 20px;
@@ -363,7 +231,7 @@ const Carat = ({
 };
 
 const DnDTree = () => {
-  const [tree, setTree] = useState(dataTree);
+  const [tree, setTree] = useState(() => buildTree([...categories, ...packs]));
 
   const onExpand = (itemId: ItemId) => {
     setTree(mutateTree(tree, itemId, { isExpanded: true }));
@@ -373,16 +241,21 @@ const DnDTree = () => {
     setTree(mutateTree(tree, itemId, { isExpanded: false }));
   };
 
+  /** @TODO zod - source validation */
   const onDragEnd = (source: TreeSourcePosition, destination?: TreeDestinationPosition) => {
     const [type, id] = String(source.parentId).split('');
-    const rootId = '0';
 
     const wrongDestination = !destination;
-    const moveItemOutside =
-      !wrongDestination && source.parentId !== rootId && destination.parentId === rootId;
-    const moveCategoryIntoCategory =
-      !wrongDestination && source.parentId === rootId && destination.parentId !== rootId;
-    const moveIntoItem = String(destination?.parentId).split('-')[0] === 'doc';
+
+    const isPack = source.parentId !== ROOT_ID;
+    const isCategory = !isPack;
+
+    const inCategory = !wrongDestination && destination.parentId !== ROOT_ID;
+    const isOutside = !wrongDestination && destination.parentId === ROOT_ID;
+
+    const moveItemOutside = isPack && isOutside;
+    const moveCategoryIntoCategory = isCategory && inCategory;
+    const moveIntoItem = String(destination?.parentId).split('-')[0] === 'pack';
 
     if (wrongDestination || moveItemOutside || moveCategoryIntoCategory || moveIntoItem) {
       return;
