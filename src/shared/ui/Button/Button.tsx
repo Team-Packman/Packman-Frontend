@@ -111,4 +111,4 @@ const Button = (props: PropsWithChildren<ButtonProps>) => {
   );
 };
 
-export default Button;
+export { Button };

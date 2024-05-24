@@ -1,10 +1,10 @@
 import { AnimatePresence } from 'framer-motion';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
-import Folders from '@/pages/Folders/Folders';
-import NotFound from '@/pages/NotFound/NotFound';
+import { Folders } from '@/pages/folders';
+import { NotFound } from '@/pages/not-found';
 
-import { PATH } from './routes';
+import { PATH } from '../../shared/router/routes';
 
 const AnimatePresenceRoutes = () => {
   const location = useLocation();
@@ -25,4 +25,4 @@ const Router = () => (
   </BrowserRouter>
 );
 
-export default Router;
+export { Router };

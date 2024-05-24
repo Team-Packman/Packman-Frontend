@@ -1,18 +1,6 @@
 {
   "arrowFunctionComponent": {
     "prefix": "afc",
-    "body": [
-      "import * as Styled from './${1}.styles';",
-      "",
-      "const ${1} = () => {",
-      "  return <div>${1}</div>;",
-      "};",
-      "",
-      "export default Chip;"
-    ]
-  },
-  "styles": {
-    "prefix": "styles",
-    "body": ["import * as Styled from './${1}.styles';"]
+    "body": ["const ${1} = () => {", "  return <div>${1}</div>;", "};", "", "export { ${1} };"]
   }
 }

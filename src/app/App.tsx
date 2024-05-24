@@ -1,7 +1,7 @@
-import AppLayout from './layout/AppLayout';
-import QueryProvider from './providers/QueryProvider';
-import StyleProvider from './providers/StyleProvider';
-import Router from './router/Router';
+import { AppLayout } from './layouts/AppLayout';
+import { QueryProvider } from './providers/QueryProvider';
+import { StyleProvider } from './providers/StyleProvider';
+import { Router } from './router/Router';
 
 const App = () => (
   <StyleProvider>
@@ -13,4 +13,4 @@ const App = () => (
   </StyleProvider>
 );
 
-export default App;
+export { App };

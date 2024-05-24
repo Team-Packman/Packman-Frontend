@@ -39,6 +39,6 @@ const Chip = ({ active = false, ...restProps }: PropsWithChildren<ChipProps>) =>
   <Layout active={active} {...restProps} />
 );
 
-export default Chip;
+export { Chip };
 
 export type { ChipProps };

@@ -15,4 +15,4 @@ const Layout = styled.span`
 
 const Tag = (props: PropsWithChildren<TagProps>) => <Layout {...props} />;
 
-export default Tag;
+export { Tag };

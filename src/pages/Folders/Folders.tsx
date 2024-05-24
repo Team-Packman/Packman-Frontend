@@ -1,5 +1,5 @@
-import AppScreen from '@/shared/ui/AppScreen/AppScreen';
-import DnDTree from '@/shared/ui/DnDTree/DnDTree';
+import { AppScreen } from '@/shared/ui/app-screen/AppScreen';
+import { DnDTree } from '@/shared/ui/dnd-tree/DnDTree';
 
 const Folders = () => (
   <AppScreen>
@@ -7,4 +7,4 @@ const Folders = () => (
   </AppScreen>
 );
 
-export default Folders;
+export { Folders };
