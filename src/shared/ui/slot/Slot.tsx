@@ -20,7 +20,6 @@ type SlotProps = {
 
 const Slot = forwardRef<HTMLElement, SlotProps>((props, forwardedRef) => {
   const { children, ...slotProps } = props;
-
   return (
     <_Slot {...slotProps} ref={forwardedRef}>
       {children}
@@ -60,13 +59,14 @@ const mergeProps = (slotProps: AnyProps, childProps: AnyProps) => {
 
   Object.keys(childProps).forEach(propName => {
     const slotPropValue = slotProps[propName];
+
     const childPropValue = childProps[propName];
 
     const isHandler = /^on[A-Z]/.test(propName);
 
     if (isHandler) {
       if (slotPropValue && childPropValue) {
-        overrideProps[propName] = composeFunctions(childPropValue, childPropValue);
+        overrideProps[propName] = composeFunctions(slotPropValue, childPropValue);
       } else if (slotPropValue) {
         overrideProps[propName] = slotPropValue;
       }
