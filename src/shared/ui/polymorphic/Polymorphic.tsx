@@ -44,9 +44,7 @@ const _Polymorphic = <E extends ElementType = 'div'>(
   return <Component {...restProps} ref={forwardedRef} />;
 };
 
-const Polymorphic = forwardRef(_Polymorphic) as <E extends ElementType = 'div'>(
-  props: PolymorphicProps<E, { asChild?: boolean }> & { ref?: ForwardedRef<ElementRef<E>> },
-) => ReactElement;
+const Polymorphic = forwardRef(_Polymorphic);
 
 const polymorphic = <
   P extends PropsWithRenderProps<object, never>,
