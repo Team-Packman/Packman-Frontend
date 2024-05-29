@@ -5,15 +5,12 @@ type SameArgFunction<E> = {
 type ComposedFunction<E> = SameArgFunction<E>;
 
 type ComposeFunctions = {
-  <T>(
-    externalFunction?: SameArgFunction<T>,
-    innerFunction?: SameArgFunction<T>,
-  ): ComposedFunction<T>;
+  <T>(...functions: Array<SameArgFunction<T> | undefined>): ComposedFunction<T>;
 };
 
-const composeFunctions: ComposeFunctions = (externalFunction, innerFunction) => arg => {
-  externalFunction?.(arg);
-  innerFunction?.(arg);
-};
-
+const composeFunctions: ComposeFunctions =
+  (...functions) =>
+  (...params) => {
+    functions.forEach(fn => fn?.(...params));
+  };
 export { composeFunctions };
