@@ -8,6 +8,7 @@ import type { NonNullableObject } from '@/shared/types/utility';
 
 import { Polymorphic, polymorphic } from '../polymorphic/Polymorphic';
 import { ResolveChildren } from '../resolve-children/ResolveChildren';
+import { getDataState } from './model/dataAttr';
 import { CheckboxProvider, useCheckboxContext } from './providers/CheckboxProvider';
 
 type CheckboxProps = PropsWithRenderProps<
@@ -23,6 +24,7 @@ type SharedProps = NonNullableObject<Pick<CheckboxProps, 'checked'>> & { toggle:
 const Root = polymorphic<CheckboxProps>((props, forwardedRef) => {
   const {
     children,
+    disabled,
     checked: checkedProp,
     onClick: onClickProp,
     defaultChecked,
@@ -36,15 +38,24 @@ const Root = polymorphic<CheckboxProps>((props, forwardedRef) => {
     onChange: onCheckedChange,
   });
 
-  const toggle = () => setChecked(prev => !prev);
+  const toggle = () => !disabled && setChecked(prev => !prev);
 
   return (
     <CheckboxProvider value={{ checked, toggle }}>
-      <input type="checkbox" {...restProps} checked={checked} aria-hidden hidden />
+      <input
+        type="checkbox"
+        {...restProps}
+        disabled={disabled}
+        checked={checked}
+        aria-hidden
+        hidden
+      />
       <Polymorphic
         {...restProps}
         ref={forwardedRef}
         onClick={composeFunctions(toggle, onClickProp)}
+        data-state={getDataState(checked)}
+        data-disabled={disabled}
       >
         {resolveChildren(children, { checked, toggle })}
       </Polymorphic>
@@ -60,7 +71,7 @@ const Indicator = polymorphic<IndicatorProps>((props, forwardedRef) => {
   const { checked } = useCheckboxContext();
 
   return checked ? (
-    <Polymorphic {...restProps} ref={forwardedRef}>
+    <Polymorphic {...restProps} ref={forwardedRef} data-state={getDataState(checked)}>
       <ResolveChildren checked={checked}>{children}</ResolveChildren>
     </Polymorphic>
   ) : null;
