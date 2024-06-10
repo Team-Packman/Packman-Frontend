@@ -7,13 +7,11 @@ import type { PropsWithRenderProps } from '@/shared/types/compound';
 import type { NonNullableObject } from '@/shared/types/utility';
 
 import { Polymorphic, polymorphic } from '../polymorphic/Polymorphic';
-import { ResolveChildren } from '../resolve-children/ResolveChildren';
 import { getDataState } from './model/dataAttr';
 import { CheckboxProvider, useCheckboxContext } from './providers/CheckboxProvider';
 
 type CheckboxProps = PropsWithRenderProps<
   {
-    defaultChecked?: boolean;
     onCheckedChange?: (checked: boolean) => void;
   } & ComponentPropsWithoutRef<'input'>,
   { checked: boolean; toggle: VoidFunction }
@@ -72,7 +70,7 @@ const Indicator = polymorphic<IndicatorProps>((props, forwardedRef) => {
 
   return checked ? (
     <Polymorphic {...restProps} ref={forwardedRef} data-state={getDataState(checked)}>
-      <ResolveChildren checked={checked}>{children}</ResolveChildren>
+      {resolveChildren(children, { checked })}
     </Polymorphic>
   ) : null;
 });
