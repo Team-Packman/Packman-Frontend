@@ -1,13 +1,13 @@
 import type { TreeData, TreeItem } from '@atlaskit/tree';
 
+import { ROOT_ID } from '../constants/dnd-tree';
+
 type Node = {
   id: number | string;
   name: string;
   type: string;
   parent: number | string | null;
 };
-
-const ROOT_ID = 'ROOT';
 
 const buildTree = (nodes: Node[]): TreeData => {
   const parentMap = new Map<string, string[]>();
