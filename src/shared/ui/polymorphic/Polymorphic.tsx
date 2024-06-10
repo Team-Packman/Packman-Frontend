@@ -17,21 +17,19 @@ import type { PropsWithRenderProps } from '@/shared/types/compound';
 
 import { Slot } from '../slot/Slot';
 
-type PropsWithElement<T extends ElementType, P = object> = P & {
-  as?: T;
+type PropsWithElement<E extends ElementType, P = object> = P & {
+  as?: E;
 };
 
 type PropsWithAsChild<P = object> = P & {
   asChild?: boolean;
 };
 
-type PropsToOmit<T extends ElementType, P = object> = keyof (T & P);
-
 type ValidComponentProps<E extends ElementType, P extends object = object> = P &
-  Omit<ComponentPropsWithoutRef<E>, PropsToOmit<E, P>>;
+  Omit<ComponentPropsWithoutRef<E>, keyof P>;
 
-type PolymorphicProps<T extends ElementType, P extends object> = ValidComponentProps<T, P> &
-  PropsWithElement<T, P> &
+type PolymorphicProps<E extends ElementType, P extends object> = ValidComponentProps<E, P> &
+  PropsWithElement<E, P> &
   PropsWithAsChild<P>;
 
 const _Polymorphic = <E extends ElementType = 'div'>(
@@ -63,7 +61,6 @@ const polymorphic = <
       {...(props as ComponentProps<typeof ForwardedBaseComponent>)}
     />
   );
-
   return forwardRef(OuterComponent) as unknown as <E extends _E>(
     props: PolymorphicProps<E, P> & { ref?: ForwardedRef<ElementRef<E>> },
   ) => ReactElement;
