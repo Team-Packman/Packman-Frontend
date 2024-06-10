@@ -2,9 +2,10 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react';
 
-type ChipProps = {
+type ChipProps = PropsWithChildren<{
   active?: boolean;
-} & ComponentPropsWithoutRef<'span'>;
+}> &
+  ComponentPropsWithoutRef<'span'>;
 
 type LayoutProps = Pick<ChipProps, 'active'>;
 
@@ -35,7 +36,7 @@ const Layout = styled.span<LayoutProps>`
         `}
 `;
 
-const Chip = ({ active = false, ...restProps }: PropsWithChildren<ChipProps>) => (
+const Chip = ({ active = false, ...restProps }: ChipProps) => (
   <Layout active={active} {...restProps} />
 );
 
