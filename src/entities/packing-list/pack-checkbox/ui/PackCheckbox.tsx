@@ -3,6 +3,9 @@ import styled from '@emotion/styled';
 import { Checkbox } from '@/shared/ui/checkbox/Checkbox';
 
 const Root = styled(Checkbox.Root)`
+  cursor: pointer;
+  user-select: none;
+
   width: 1.8rem;
   height: 1.8rem;
   padding: 0.2rem;
