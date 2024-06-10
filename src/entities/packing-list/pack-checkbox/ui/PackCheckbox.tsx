@@ -27,6 +27,7 @@ const Indicator = styled(Checkbox.Indicator)`
   border-radius: 50%;
 `;
 
+/** @TODO migrate to features */
 const PackCheckbox = () => (
   <Root>
     <Indicator />

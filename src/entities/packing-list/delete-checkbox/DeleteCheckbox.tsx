@@ -26,6 +26,7 @@ const Indicator = styled(Checkbox.Indicator)`
   background-color: #ff307b;
 `;
 
+/** @TODO migrate to features */
 const DeleteCheckbox = () => (
   <Root>
     <Indicator>✔</Indicator>
