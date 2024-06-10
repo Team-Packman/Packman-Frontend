@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import ProfileIcon from '@/shared/assets/images/svg/profile-icon.svg';
 
-import { AppScreen } from '../AppScreen';
+import { AppScreen } from './AppScreen';
 
 const meta = {
   title: 'ui/AppScreen',
