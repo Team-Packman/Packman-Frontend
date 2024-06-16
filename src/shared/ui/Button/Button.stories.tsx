@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import ShareIcon from '@/assets/images/svg/share-icon.svg';
+import ShareIcon from '@/shared/assets/images/svg/share-icon.svg';
 
 import { Button } from './Button';
 

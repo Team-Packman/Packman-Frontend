@@ -6,21 +6,20 @@ import { useEffect, useRef } from 'react';
 
 import PackmanLogo from '@/shared/assets/images/svg/packman-logo-icon.svg';
 import { calcZIndex } from '@/shared/lib/calc-z-Index';
-import { media } from '@/shared/lib/media';
 import { flow } from '@/shared/lib/use-router';
 import { screenActions, screenStore } from '@/shared/stores/screen-store';
 
 import { useAppLayoutContext } from '../app-layout/context/AppLayoutContext';
+import { BackArrow } from '../back-arrow/BackArrow';
 import { GlobalPortal } from '../global-portal/GlobalPortal';
-import { BackArrow } from './components/back-arrow/BackArrow';
 
-type AppScreenProps = {
+type AppScreenProps = PropsWithChildren<{
   appBar?: {
     left?: ReactNode;
     title?: string | JSX.Element;
     right?: ReactNode;
   };
-};
+}>;
 
 type LayoutProps = { page: number };
 
@@ -96,7 +95,7 @@ const flowVariants = {
   }),
 };
 
-const AppScreen = (props: PropsWithChildren<AppScreenProps>) => {
+const AppScreen = (props: AppScreenProps) => {
   const { children, appBar = defaultAppBar } = props;
   const {
     left = defaultAppBar.left,

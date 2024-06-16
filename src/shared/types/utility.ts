@@ -1,6 +1,16 @@
-type Equal<T, U> = ((args: T) => T) extends (args: U) => U ? true : false;
+type BivarianceHack<T extends (...args: never[]) => unknown = (...args: unknown[]) => unknown> = {
+  hack(...args: Parameters<T>): ReturnType<T>;
+}['hack'];
+
+type BaseFunction = BivarianceHack;
+
+type NonNullableObject<T extends object> = { [K in keyof T]-?: T[K] };
+
+type Equal<T, U> = ((params: T) => T) extends (params: U) => U ? true : false;
 
 type Values<T extends object> = T[keyof T];
+
+type Merge<T, U> = Omit<T, keyof U> & U;
 
 type Separator = '_';
 
@@ -34,4 +44,14 @@ type SnakeToCamel<
     : SnakeToCamel<Rest, `${Acc}${Lowercase<Char>}`>
   : Acc;
 
-export type { CamelToSnake, Equal, IsLowercase, SnakeToCamel, Values };
+export type {
+  BaseFunction,
+  BivarianceHack,
+  CamelToSnake,
+  Equal,
+  IsLowercase,
+  Merge,
+  NonNullableObject,
+  SnakeToCamel,
+  Values,
+};

@@ -11,11 +11,21 @@ const Layout = styled.button`
   z-index: ${calcZIndex(10000)};
 `;
 
-const BackArrow = (props: ComponentPropsWithoutRef<'button'>) => {
+type BackArrowProps = {
+  disableRouting?: boolean;
+} & ComponentPropsWithoutRef<'button'>;
+
+const BackArrow = (props: BackArrowProps) => {
+  const { disableRouting = false, ...restProps } = props;
+
   const router = useRouter();
 
   return (
-    <Layout type="button" {...props} onClick={composeFunctions(router.back, props.onClick)}>
+    <Layout
+      {...restProps}
+      type="button"
+      onClick={disableRouting ? props.onClick : composeFunctions(router.back, props.onClick)}
+    >
       <img src={ArrowBackIcon} alt="뒤로 가기 버튼" width={24} height={24} />
     </Layout>
   );
