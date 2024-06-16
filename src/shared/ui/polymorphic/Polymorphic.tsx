@@ -44,10 +44,7 @@ const _Polymorphic = <E extends ElementType = 'div'>(
 
 const Polymorphic = forwardRef(_Polymorphic);
 
-const polymorphic = <
-  P extends PropsWithRenderProps<object, never>,
-  _E extends ElementType = ElementType,
->(
+const polymorphic = <P extends PropsWithRenderProps<object, never>, _E extends ElementType = 'div'>(
   BaseComponent: ForwardRefRenderFunction<ElementRef<_E>, PolymorphicProps<_E, P>>,
 ) => {
   const ForwardedBaseComponent = forwardRef(BaseComponent);
