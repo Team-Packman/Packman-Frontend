@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import type { ComponentProps } from 'react';
 
 import { Checkbox } from '@/shared/ui/checkbox/Checkbox';
 
@@ -26,9 +27,11 @@ const Indicator = styled(Checkbox.Indicator)`
   background-color: #ff307b;
 `;
 
+type DeleteCheckboxProps = ComponentProps<typeof Checkbox.Root>;
+
 /** @TODO migrate to features */
-const DeleteCheckbox = () => (
-  <Root>
+const DeleteCheckbox = (props: DeleteCheckboxProps) => (
+  <Root {...props}>
     <Indicator>✔</Indicator>
   </Root>
 );
