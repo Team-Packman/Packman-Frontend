@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import type { ComponentPropsWithoutRef } from 'react';
 
 import CaretIcon from '@/shared/assets/images/svg/caret-icon.svg';
 
@@ -24,10 +25,10 @@ const CaratIcon = styled.img`
 
 type CaratProps = {
   isExpanded?: boolean;
-};
+} & ComponentPropsWithoutRef<'button'>;
 
-const Carat = ({ isExpanded = false }: CaratProps) => (
-  <CaratBtn type="button" isExpanded={isExpanded}>
+const Carat = ({ isExpanded = false, ...restProps }: CaratProps) => (
+  <CaratBtn type="button" isExpanded={isExpanded} {...restProps}>
     <CaratIcon src={CaretIcon} alt="짐 목록 펼치기 및 접기 아이콘" />
   </CaratBtn>
 );
