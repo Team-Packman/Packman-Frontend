@@ -1,3 +1,7 @@
 const ROOT_ID = 'ROOT';
 
-export { ROOT_ID };
+const CATEGORY_NAME = 'category';
+
+const PACK_NAME = 'pack';
+
+export { CATEGORY_NAME, PACK_NAME, ROOT_ID };

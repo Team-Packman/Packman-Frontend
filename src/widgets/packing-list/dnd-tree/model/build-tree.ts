@@ -1,6 +1,6 @@
-import type { TreeData, TreeItem } from '@atlaskit/tree';
-
 import { ROOT_ID } from '../constants/dnd-tree';
+import type { PackingListTree } from '../types/client';
+import { packingListTreeSchema } from './dnd-item-schema';
 
 type Node = {
   id: number | string;
@@ -9,7 +9,7 @@ type Node = {
   parent: number | string | null;
 };
 
-const buildTree = (nodes: Node[]): TreeData => {
+const buildTree = (nodes: Node[]): PackingListTree => {
   const parentMap = new Map<string, string[]>();
 
   const parsedNodes = nodes.map(node => {
@@ -26,7 +26,7 @@ const buildTree = (nodes: Node[]): TreeData => {
     };
   });
 
-  const buildItem = (id: Node['id'], data: unknown, children: Array<Node['id']>): TreeItem => ({
+  const buildItem = (id: Node['id'], data: unknown, children: Array<Node['id']>) => ({
     id,
     children,
     hasChildren: children.length > 0,
@@ -34,9 +34,9 @@ const buildTree = (nodes: Node[]): TreeData => {
     data,
   });
 
-  const root = buildItem(ROOT_ID, {}, parentMap.get(ROOT_ID)!);
+  const root = buildItem(ROOT_ID, {}, parentMap.get(ROOT_ID) || []);
 
-  return {
+  return packingListTreeSchema.parse({
     rootId: ROOT_ID,
     items: {
       [root.id]: root,
@@ -48,7 +48,7 @@ const buildTree = (nodes: Node[]): TreeData => {
         {},
       ),
     },
-  };
+  });
 };
 
 export { buildTree };

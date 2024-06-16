@@ -1,7 +1,7 @@
 import type { ItemId, TreeDestinationPosition, TreeSourcePosition } from '@atlaskit/tree';
-import Tree, { moveItemOnTree, mutateTree } from '@atlaskit/tree';
+import Tree, { moveItemOnTree } from '@atlaskit/tree';
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 import {
   isEditModeSelector,
@@ -10,11 +10,16 @@ import {
 } from '@/shared/stores/packing-list';
 
 import { DnDItem } from './components/DnDItem';
+import { DnDTreeController } from './components/DnDTreeController';
 import { isValidDrag } from './lib/is-valid-drag';
 import { categories, packs } from './mocks/dnd-item-fixtures';
 import { buildTree } from './model/build-tree';
+import { packingListTreeSchema, renderPackingListItemPartialParams } from './model/dnd-item-schema';
+import { mutatePackingListTree } from './model/mutate-packing-list-tree';
 
-const DnDTreeRoot = styled.div`
+const Root = styled.section();
+
+const TreeWrapper = styled.div`
   overflow-y: auto;
   display: flex;
   flex: 1 1 auto;
@@ -35,46 +40,57 @@ const DnDTreeRoot = styled.div`
 `;
 
 const DnDTree = () => {
-  const [tree, setTree] = useState(() => buildTree([...categories, ...packs]));
+  const { tree, setTree, setBackTree } = usePackingList(
+    ({ tree, actions: { setTree, setBackTree } }) => ({ tree, setTree, setBackTree }),
+  );
+
+  /** @TODO api call 후 tree update */
+  useEffect(() => {
+    setTree(buildTree([...categories, ...packs]));
+    setBackTree(buildTree([...categories, ...packs]));
+  }, []);
 
   const isEditMode = usePackingList(isEditModeSelector);
   const { dirty } = usePackingListActions();
 
   const expand = (itemId: ItemId) => {
-    setTree(mutateTree(tree, itemId, { isExpanded: true }));
+    setTree(mutatePackingListTree(tree, itemId, { isExpanded: true }));
   };
 
   const collapse = (itemId: ItemId) => {
-    setTree(mutateTree(tree, itemId, { isExpanded: false }));
+    setTree(mutatePackingListTree(tree, itemId, { isExpanded: false }));
   };
 
-  /** @TODO zod - source validation */
   const onDragEnd = (source: TreeSourcePosition, destination?: TreeDestinationPosition) => {
-    const [type, id] = String(source.parentId).split('');
-
     if (isValidDrag(source, destination)) {
-      const mutatedTree = moveItemOnTree(tree, source, destination);
+      const target = tree.items[tree.items[source.parentId].children[source.index]];
+      const movedTree = packingListTreeSchema.parse(moveItemOnTree(tree, source, destination));
 
-      isEditMode
-        ? setTree(mutateTree(mutatedTree, destination.parentId, { isExpanded: true }))
-        : setTree(mutatedTree);
+      movedTree.items[target.id].data.parent = destination.parentId;
+
+      setTree(mutatePackingListTree(movedTree, destination.parentId, {}));
 
       dirty();
     }
   };
 
   return (
-    <DnDTreeRoot>
-      <Tree
-        tree={tree}
-        onExpand={expand}
-        onCollapse={collapse}
-        onDragEnd={onDragEnd}
-        isDragEnabled={isEditMode}
-        isNestingEnabled={isEditMode}
-        renderItem={args => <DnDItem {...args} tree={tree} />}
-      />
-    </DnDTreeRoot>
+    <Root>
+      <DnDTreeController />
+      <TreeWrapper>
+        <Tree
+          tree={tree}
+          onExpand={expand}
+          onCollapse={collapse}
+          onDragEnd={onDragEnd}
+          isDragEnabled={isEditMode}
+          isNestingEnabled={isEditMode}
+          renderItem={args => (
+            <DnDItem {...Object.assign(args, renderPackingListItemPartialParams.parse(args))} />
+          )}
+        />
+      </TreeWrapper>
+    </Root>
   );
 };
 

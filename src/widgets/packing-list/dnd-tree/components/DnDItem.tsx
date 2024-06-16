@@ -1,4 +1,3 @@
-import type { RenderItemParams, TreeData } from '@atlaskit/tree';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useLayoutEffect } from 'react';
@@ -7,9 +6,21 @@ import { Carat } from '@/entities/packing-list/carat/ui/Carat';
 import { DeleteCheckbox } from '@/entities/packing-list/delete-checkbox/DeleteCheckbox';
 import { PackCheckbox } from '@/entities/packing-list/pack-checkbox/ui/PackCheckbox';
 import HamburgerIcon from '@/shared/assets/images/svg/hamburger-icon.svg';
-import { isEditModeSelector, usePackingList } from '@/shared/stores/packing-list';
+import {
+  isEditModeSelector,
+  selectedItemsForDeletionSelector,
+  usePackingList,
+  usePackingListActions,
+} from '@/shared/stores/packing-list';
 import { Stack } from '@/shared/ui/stack/Stack';
 
+import { Editable } from '../../components/Editable';
+import { packingListTreeCategorySchema, packingListTreePackSchema } from '../model/dnd-item-schema';
+import type {
+  RenderPackingListCategoryParams,
+  RenderPackingListItemParams,
+  RenderPackingListPackParams,
+} from '../types/client';
 import { AddPackButton } from './AddPackButton';
 
 const ItemContainer = styled.div`
@@ -28,13 +39,15 @@ const ItemRight = styled(Stack)`
   margin-left: auto;
 `;
 
-const PackCount = styled.div`
+const PackCount = styled.div<{
+  isAllPacked: boolean;
+}>`
   flex-shrink: 0;
 
   font-size: 1.4rem;
   font-weight: 600;
   line-height: 140%;
-  color: #bcbcbc;
+  color: ${({ isAllPacked }) => (isAllPacked ? '#ff307b' : '#bcbcbc')};
   letter-spacing: -0.28px;
 `;
 
@@ -58,10 +71,7 @@ const ItemRoot = styled.article<{ isDragging: boolean }>`
     `}
 `;
 
-const CategoryRoot = styled(ItemRoot)<{
-  isEditMode: boolean;
-  hasChildren: boolean;
-}>`
+const CategoryRoot = styled(ItemRoot)<{ isEditMode: boolean; hasChildren: boolean }>`
   margin-top: 1.2rem;
 
   font-weight: 600;
@@ -117,24 +127,64 @@ const PackRoot = styled(ItemRoot)`
   }}
 `;
 
-type DnDItemProps = RenderItemParams & { tree: TreeData };
+type DnDItemProps = RenderPackingListItemParams;
 
-/** @TODO zod - item validation */
+/** @TODO hook 분리  */
+/** @TODO useTinyMemo  */
+/** @TODO dnd + checkbox 유한상태머신 고려  */
+/** @TODO edit mode 분리  */
+/** @TODO selector 컨벤션 통일  */
+/** @TODO 전체 삭제 한 경우 UI 대응  */
 const DnDItem = (props: DnDItemProps) => {
-  const isCategory = props.item.data.type === 'category';
+  const { success: isCategory, data: categoryItem } = packingListTreeCategorySchema.safeParse(
+    props.item,
+  );
+  const { success: isPack, data: packItem } = packingListTreePackSchema.safeParse(props.item);
 
-  return isCategory ? <Category {...props} /> : <Pack {...props} />;
+  if (isCategory) {
+    return <Category {...{ ...props, item: categoryItem }} />;
+  }
+
+  if (isPack) {
+    return <Pack {...{ ...props, item: packItem }} />;
+  }
+
+  throw new Error('Invalid dnd item');
 };
 
-const Category = (props: DnDItemProps) => {
+type DnDCategoryProps = RenderPackingListCategoryParams;
+
+const Category = (props: DnDCategoryProps) => {
   const { item, onExpand, onCollapse, provided, snapshot } = props;
-  const isEditMode = usePackingList(isEditModeSelector);
 
-  const hasChildren = item.children && item.children.length > 0;
+  const { isEditMode, selectedItemsForDeletion, tree } = usePackingList(
+    ({ isEditMode, selectedItemsForDeletion, tree }) => ({
+      isEditMode,
+      selectedItemsForDeletion,
+      tree,
+    }),
+  );
 
-  const toggle = item.isExpanded ? onCollapse : onExpand;
+  const { selectItemForDeletion, deselectItemForDeletion } = usePackingListActions();
 
-  const expand = !isEditMode ? () => toggle(item.id) : () => {};
+  const isAllPacked = item.data.totalCnt === item.data.checkedCnt;
+
+  const toggleExpansion = item.isExpanded ? onCollapse : onExpand;
+
+  const toggleExpansionOnPackMode = !isEditMode ? () => toggleExpansion(item.id) : () => {};
+
+  const selectAllItemsForDeletion = () => {
+    selectItemForDeletion(item.id);
+    tree.items[item.id].children.forEach(selectItemForDeletion);
+  };
+
+  const deselectAllItemsForDeletion = () => {
+    deselectItemForDeletion(item.id);
+    tree.items[item.id].children.forEach(deselectItemForDeletion);
+  };
+
+  const toggleAllSelectingDeletion = (checked: boolean) =>
+    (checked ? selectAllItemsForDeletion : deselectAllItemsForDeletion)();
 
   /** @description 빈 카테고리에 최초로 아이템을 삽입하는 경우 expand */
   useLayoutEffect(() => {
@@ -142,6 +192,22 @@ const Category = (props: DnDItemProps) => {
       onExpand(item.id);
     }
   }, [item.hasChildren]);
+
+  useLayoutEffect(() => {
+    const allChildItemsSelected = item.children.every(packId =>
+      selectedItemsForDeletion.has(packId),
+    );
+
+    if (!item.hasChildren) return;
+
+    if (!selectedItemsForDeletion.has(item.id) && allChildItemsSelected) {
+      selectItemForDeletion(item.id);
+    }
+
+    if (selectedItemsForDeletion.has(item.id) && !allChildItemsSelected) {
+      deselectItemForDeletion(item.id);
+    }
+  });
 
   return (
     <>
@@ -151,36 +217,53 @@ const Category = (props: DnDItemProps) => {
         className={item.data.type}
         isDragging={snapshot.isDragging}
         isEditMode={isEditMode}
-        hasChildren={hasChildren}
-        onClick={expand}
+        hasChildren={item.hasChildren}
       >
         <ItemContainer>
           <ItemLeft gap={9}>
-            {isEditMode && <DeleteCheckbox />}
-            {item.data.name}
+            {isEditMode && (
+              <DeleteCheckbox
+                checked={selectedItemsForDeletion.has(item.id)}
+                onCheckedChange={toggleAllSelectingDeletion}
+              />
+            )}
+            <Editable enabled={!isEditMode}>{item.data.name}</Editable>
           </ItemLeft>
           <ItemRight gap={12}>
             {isEditMode ? (
               <img src={HamburgerIcon} alt="짐 재정렬 아이콘" {...provided.dragHandleProps} />
             ) : (
               <>
-                <PackCount>
+                <PackCount isAllPacked={isAllPacked}>
                   {item.data.checkedCnt}/{item.data.totalCnt}
                 </PackCount>
-                {hasChildren && <Carat isExpanded={item.isExpanded} />}
+                {item.hasChildren && (
+                  <Carat isExpanded={item.isExpanded} onClick={toggleExpansionOnPackMode} />
+                )}
               </>
             )}
           </ItemRight>
         </ItemContainer>
       </CategoryRoot>
-      {!hasChildren && !isEditMode && <AddPackButton />}
+      {!item.hasChildren && !isEditMode && <AddPackButton />}
     </>
   );
 };
-const Pack = (props: DnDItemProps) => {
-  const { item, provided, snapshot, tree } = props;
+
+type DnDPackProps = RenderPackingListPackParams;
+
+const Pack = (props: DnDPackProps) => {
+  const { item, provided, snapshot } = props;
 
   const isEditMode = usePackingList(isEditModeSelector);
+  const tree = usePackingList(state => state.tree);
+
+  const selectedItemsForDeletion = usePackingList(selectedItemsForDeletionSelector);
+
+  const { selectItemForDeletion, deselectItemForDeletion } = usePackingListActions();
+
+  const toggleSelectingForDeletion = (checked: boolean) =>
+    (checked ? selectItemForDeletion : deselectItemForDeletion)(item.id);
 
   const isLastPack = tree.items[item.data.parent].children.at(-1) === item.id;
 
@@ -194,8 +277,15 @@ const Pack = (props: DnDItemProps) => {
       >
         <ItemContainer>
           <ItemLeft gap={9}>
-            {isEditMode ? <DeleteCheckbox /> : <PackCheckbox />}
-            {item.data.name}
+            {isEditMode ? (
+              <DeleteCheckbox
+                checked={selectedItemsForDeletion.has(item.id)}
+                onCheckedChange={toggleSelectingForDeletion}
+              />
+            ) : (
+              <PackCheckbox />
+            )}
+            <Editable enabled={!isEditMode}>{item.data.name}</Editable>
           </ItemLeft>
           <ItemRight gap={12}>
             {isEditMode && (
