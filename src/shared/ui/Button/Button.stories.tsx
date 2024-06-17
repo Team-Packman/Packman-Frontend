@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import type { ComponentProps } from 'react';
 
 import ShareIcon from '@/shared/assets/images/svg/share-icon.svg';
 
@@ -41,6 +42,18 @@ const ButtonTemplate: Story = {
   ),
 };
 
+const TyeBTemplate = {
+  render: (args: ComponentProps<typeof Button.TypeB>) => (
+    <>
+      <Button.TypeB variant="primary">PRIMARY</Button.TypeB>
+      <Button.TypeB variant="secondary">SECONDARY</Button.TypeB>
+      <Button.TypeB {...args} variant="secondary">
+        WITH ICON
+      </Button.TypeB>
+    </>
+  ),
+};
+
 export const Small: Story = {
   ...ButtonTemplate,
   args: {
@@ -66,6 +79,13 @@ export const WithIcon: Story = {
   ...ButtonTemplate,
   args: {
     ...Big.args,
+    icon: 'withIcon',
+  },
+};
+
+export const TypeB = {
+  ...TyeBTemplate,
+  args: {
     icon: 'withIcon',
   },
 };
