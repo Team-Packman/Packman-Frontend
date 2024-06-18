@@ -8,7 +8,7 @@ type EditableItemProps = {
 };
 
 const Editable = polymorphic<EditableItemProps>((props, forwardRef) => {
-  const { enabled, ...restProps } = props;
+  const { enabled = true, ...restProps } = props;
 
   const blurOnEnter = composeFunctions((e: KeyboardEvent<HTMLElement>) => {
     if (e.key === 'Enter') {

@@ -65,4 +65,4 @@ const polymorphic = <P extends PropsWithRenderProps<object, never>, _E extends E
 
 export { Polymorphic, polymorphic };
 
-export type { PolymorphicProps };
+export type { PolymorphicProps, ValidComponentProps };

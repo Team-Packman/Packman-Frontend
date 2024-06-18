@@ -4,7 +4,6 @@ type StaticPath = Values<typeof STATIC>;
 type DynamicPath = Values<typeof DYNAMIC>;
 
 const STATIC = {
-  FOLDERS: '/',
   EXCEPTION: '/*',
 } as const;
 
