@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useLayoutEffect } from 'react';
 
-import { Carat } from '@/entities/packing-list/carat/ui/Carat';
+import { Caret } from '@/entities/packing-list/caret/ui/Caret';
 import { DeleteCheckbox } from '@/entities/packing-list/delete-checkbox/DeleteCheckbox';
 import { PackCheckbox } from '@/entities/packing-list/pack-checkbox/ui/PackCheckbox';
 import HamburgerIcon from '@/shared/assets/images/svg/hamburger-icon.svg';
@@ -238,7 +238,7 @@ const Category = (props: DnDCategoryProps) => {
                   {item.data.checkedCnt}/{item.data.totalCnt}
                 </PackCount>
                 {item.hasChildren && (
-                  <Carat isExpanded={item.isExpanded} onClick={toggleExpansionOnPackMode} />
+                  <Caret isExpanded={item.isExpanded} onClick={toggleExpansionOnPackMode} />
                 )}
               </>
             )}

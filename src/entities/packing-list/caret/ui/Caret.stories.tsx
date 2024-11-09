@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Carat } from './Carat';
+import { Caret } from './Caret';
 
 const meta = {
-  title: 'ui/Carat',
-  component: Carat,
-} satisfies Meta<typeof Carat>;
+  title: 'ui/Caret',
+  component: Caret,
+} satisfies Meta<typeof Caret>;
 
 export default meta;
 
