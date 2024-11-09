@@ -3,13 +3,13 @@
 /* eslint-disable indent */
 
 import type {
-  ComponentProps,
   ComponentPropsWithoutRef,
   ElementRef,
   ElementType,
   ForwardedRef,
   ForwardRefRenderFunction,
   ReactElement,
+  ReactNode,
 } from 'react';
 import { forwardRef } from 'react';
 
@@ -32,9 +32,13 @@ type PolymorphicProps<E extends ElementType, P extends object> = ValidComponentP
   PropsWithElement<E, P> &
   PropsWithAsChild<P>;
 
+type PolymorphicComponent<P = object> = <E extends ElementType = 'div'>(
+  props: PolymorphicProps<E, P & { ref?: ForwardedRef<ElementRef<E>> }>,
+) => ReactNode;
+
 const _Polymorphic = <E extends ElementType = 'div'>(
   props: PolymorphicProps<E, { asChild?: boolean }>,
-  forwardedRef: ForwardedRef<ElementRef<E>>,
+  forwardedRef: unknown,
 ) => {
   const { asChild, as = 'div', ...restProps } = props;
   const Component: ReactElement | ElementType = asChild ? Slot : as;
@@ -42,26 +46,11 @@ const _Polymorphic = <E extends ElementType = 'div'>(
   return <Component {...restProps} ref={forwardedRef} />;
 };
 
-const Polymorphic = forwardRef(_Polymorphic);
+const Polymorphic = forwardRef(_Polymorphic) as unknown as PolymorphicComponent;
 
 const polymorphic = <P extends PropsWithRenderProps<object, never>, _E extends ElementType = 'div'>(
   BaseComponent: ForwardRefRenderFunction<ElementRef<_E>, PolymorphicProps<_E, P>>,
-) => {
-  const ForwardedBaseComponent = forwardRef(BaseComponent);
-
-  const OuterComponent = <E extends _E>(
-    props: PolymorphicProps<E, P>,
-    forwardedRef: ForwardedRef<ElementRef<E>>,
-  ) => (
-    <ForwardedBaseComponent
-      ref={forwardedRef}
-      {...(props as ComponentProps<typeof ForwardedBaseComponent>)}
-    />
-  );
-  return forwardRef(OuterComponent) as unknown as <E extends _E>(
-    props: PolymorphicProps<E, P> & { ref?: ForwardedRef<ElementRef<E>> },
-  ) => ReactElement;
-};
+) => forwardRef(BaseComponent);
 
 export { Polymorphic, polymorphic };
 
