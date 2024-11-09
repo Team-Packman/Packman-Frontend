@@ -56,6 +56,7 @@ module.exports = {
 
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/no-unused-expressions': 'off',
     '@typescript-eslint/consistent-type-imports': 'error',
 
     'simple-import-sort/imports': 'error',
