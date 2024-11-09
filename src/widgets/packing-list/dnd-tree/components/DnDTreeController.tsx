@@ -5,7 +5,6 @@ import {
   isAnyItemForDeletionSelectedSelector,
   isEditModeSelector,
   selectedItemForDeletionCountSelector,
-  selectedItemsForDeletionSelector,
   usePackingList,
   usePackingListActions,
 } from '@/shared/stores/packing-list';
@@ -105,16 +104,11 @@ const EditModeController = () => {
   );
 };
 
-const PackModeController = () => {
-  const selectedItemsForDeletion = usePackingList(selectedItemsForDeletionSelector);
-  selectedItemsForDeletion;
-
-  return (
-    <PackModeRoot>
-      <AddCategoryButton type="button">카테고리 추가</AddCategoryButton>
-      <PeepSuppliesButton type="button">준비물 엿보기</PeepSuppliesButton>
-    </PackModeRoot>
-  );
-};
+const PackModeController = () => (
+  <PackModeRoot>
+    <AddCategoryButton type="button">카테고리 추가</AddCategoryButton>
+    <PeepSuppliesButton type="button">준비물 엿보기</PeepSuppliesButton>
+  </PackModeRoot>
+);
 
 export { DnDTreeController };
