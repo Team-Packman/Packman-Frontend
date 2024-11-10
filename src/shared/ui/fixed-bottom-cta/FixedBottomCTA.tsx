@@ -41,6 +41,7 @@ const ButtonContainer = styled.div<ButtonContainerProps>`
         `;
 
       default:
+        direction satisfies never | undefined;
     }
   }};
 `;

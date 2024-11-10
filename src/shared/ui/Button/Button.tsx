@@ -1,16 +1,66 @@
+import type { SerializedStyles } from '@emotion/react';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { darken } from 'polished';
-import type { ComponentPropsWithoutRef, PropsWithChildren, ReactNode } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  type ForwardedRef,
+  forwardRef,
+  type PropsWithChildren,
+  type ReactNode,
+} from 'react';
+
+import type { Theme } from '@/shared/styles/theme/theme';
 
 type ButtonProps = PropsWithChildren<{
-  variant?: 'outlined' | 'contained';
+  variant?: 'outlined' | 'contained' | 'dimmed';
   size?: 'small' | 'middle' | 'big' | 'auto';
   icon?: ReactNode;
 }> &
   ComponentPropsWithoutRef<'button'>;
 
 type LayoutProps = Pick<ButtonProps, 'variant' | 'size'>;
+
+const typeAVariant = ({
+  color,
+}: Theme): Record<NonNullable<ButtonProps['variant']>, SerializedStyles> => ({
+  outlined: css`
+    color: ${color.pmBlack};
+
+    background-color: ${color.white};
+    border: 1px solid ${color.pmBlack};
+
+    &:active {
+      background-color: ${darken(0.1, color.white)};
+      border-color: ${darken(0.1, color.pmBlack)};
+    }
+  `,
+  contained: css`
+    color: ${color.white};
+
+    background-color: ${color.pmPink};
+    border: 1px solid ${color.pmPink};
+
+    &:active {
+      color: ${darken(0.1, color.white)};
+
+      background-color: ${darken(0.1, color.pmPink)};
+      border-color: ${darken(0.1, color.pmPink)};
+    }
+  `,
+  dimmed: css`
+    border-radius: 8px;
+    border: 1px solid ${color.pmGray};
+    background: ${color.white};
+
+    color: var(--gray-gray4, #909090);
+
+    &:active {
+      background-color: ${darken(0.1, color.white)};
+      border-color: ${darken(0.1, color.pmGray)};
+    }
+  `,
+});
 
 const Layout = styled.button<LayoutProps>`
   display: flex;
@@ -44,45 +94,30 @@ const Layout = styled.button<LayoutProps>`
 
   ${({ theme: { typo } }) => typo.body4}
 
-  ${({ variant, theme: { color } }) => {
+  ${({ variant, theme }) => {
     switch (variant) {
       case 'outlined':
-        return css`
-          color: ${color.pmBlack};
-
-          background-color: ${color.white};
-          border: 1px solid ${color.pmBlack};
-
-          &:active {
-            background-color: ${darken(0.1, color.white)};
-            border-color: ${darken(0.1, color.pmBlack)};
-          }
-        `;
+        return typeAVariant(theme).outlined;
 
       case 'contained':
-        return css`
-          color: ${color.white};
+        return typeAVariant(theme).contained;
 
-          background-color: ${color.pmPink};
-          border: 1px solid ${color.pmPink};
-
-          &:active {
-            color: ${darken(0.1, color.white)};
-
-            background-color: ${darken(0.1, color.pmPink)};
-            border-color: ${darken(0.1, color.pmPink)};
-          }
-        `;
+      case 'dimmed':
+        return typeAVariant(theme).dimmed;
 
       default:
+        variant satisfies never | undefined;
     }
   }}
 
-  ${({ size }) => {
+  ${({ size, theme: { typo } }) => {
     switch (size) {
       case 'auto':
         return css`
           width: 100%;
+          height: 100%;
+
+          ${typo.medium16}}
         `;
 
       case 'small':
@@ -99,23 +134,31 @@ const Layout = styled.button<LayoutProps>`
       case 'big':
         return css`
           width: 100%;
+          height: 4.6rem;
         `;
 
       default:
+        size satisfies never | undefined;
     }
   }}
+
+  &[data-state='checked'] {
+    ${({ theme }) => typeAVariant(theme).contained}
+  }
 `;
 
-const Button = (props: ButtonProps) => {
+const Button = forwardRef((props: ButtonProps, forwardedRef: ForwardedRef<HTMLButtonElement>) => {
   const { variant = 'outlined', size = 'auto', icon, children, ...restProps } = props;
 
   return (
-    <Layout type="button" variant={variant} size={size} {...restProps}>
+    <Layout type="button" variant={variant} size={size} {...restProps} ref={forwardedRef}>
       {icon}
       {children}
     </Layout>
   );
-};
+});
+
+Button.displayName = 'Button';
 
 type TypeBProps = PropsWithChildren<{
   variant?: 'primary' | 'secondary';
@@ -135,12 +178,7 @@ const TypeBLayout = styled.button<TypeBLayoutProps>`
   height: 2.8rem;
   padding: 0.2rem 1rem;
 
-  font-size: 1.4rem;
-  font-weight: 600;
-  line-height: 140%;
-  color: #535353;
-  text-align: center;
-  letter-spacing: -0.28px;
+  ${({ theme: { typo } }) => typo.semibold14}
 
   border-radius: 4px;
 
@@ -179,21 +217,24 @@ const TypeBLayout = styled.button<TypeBLayoutProps>`
         `;
 
       default:
+        variant satisfies never | undefined;
     }
   }}
 `;
 
-const TypeB = (props: TypeBProps) => {
+const TypeB = forwardRef((props: TypeBProps, forwardedRef: ForwardedRef<HTMLButtonElement>) => {
   const { variant = 'primary', icon, children, ...restProps } = props;
 
   return (
-    <TypeBLayout type="button" variant={variant} {...restProps}>
+    <TypeBLayout type="button" variant={variant} {...restProps} ref={forwardedRef}>
       {icon}
       {children}
     </TypeBLayout>
   );
-};
+});
 
-Button.TypeB = TypeB;
+TypeB.displayName = 'TypeB';
 
-export { Button };
+const NamedSpaceButton = Object.assign(Button, { TypeB });
+
+export { NamedSpaceButton as Button };

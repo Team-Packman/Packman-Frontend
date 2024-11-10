@@ -10,6 +10,7 @@ const STATIC = {
 const DYNAMIC = {
   PACKING_LIST_OVERVIEW: '/folders/:id',
   PACKING_LIST: '/packing-list/:id',
+  CREATE_PACKING_LIST: '/packing-list/create',
 } as const;
 
 const PATH = {

@@ -52,6 +52,42 @@ const typo = {
     fontSize: '12px',
     fontWeight: 400,
   },
+  medium12: {
+    fontSize: '12px',
+    fontWeight: 500,
+    lineHeight: '140%',
+    letterSpacing: '-0.02em',
+  },
+  medium14: {
+    fontSize: '14px',
+    fontWeight: 500,
+    lineHeight: '140%',
+    letterSpacing: '-0.02em',
+  },
+  medium16: {
+    fontSize: '16px',
+    fontWeight: 500,
+    lineHeight: '140%',
+    letterSpacing: '-0.02em',
+  },
+  semibold14: {
+    fontSize: '14px',
+    fontWeight: 600,
+    lineHeight: '140%',
+    letterSpacing: '-0.02em',
+  },
+  semibold16: {
+    fontSize: '16px',
+    fontWeight: 600,
+    lineHeight: '140%',
+    letterSpacing: '-0.02em',
+  },
+  bold20: {
+    fontSize: '20px',
+    fontWeight: 700,
+    lineHeight: '140%',
+    letterSpacing: '-0.02em',
+  },
 };
 
 export { typo };

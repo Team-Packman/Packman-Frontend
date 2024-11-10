@@ -4,6 +4,7 @@ import { useRef } from 'react';
 
 import { composeFunctions } from '@/shared/lib/compose-functions';
 import { resolveChildren } from '@/shared/lib/resolve-children';
+import { useBoolean } from '@/shared/lib/use-boolean';
 import { useControllableState } from '@/shared/lib/use-controllable-state';
 import type { PropsWithRenderProps } from '@/shared/types/compound';
 
@@ -31,13 +32,14 @@ type OSDatePickerProps = ValidComponentProps<
       value?: YYYYMMDD;
       onValueChange?: (value: YYYYMMDD) => void;
     },
-    { value: YYYYMMDD }
+    { value: YYYYMMDD; isModified: boolean }
   >
 >;
 
 const OSDatePicker = (props: OSDatePickerProps) => {
   const { children, value: valueProp, onClick: onClickProp, onValueChange, ...restProps } = props;
 
+  const { value: isModified, setTrue: setIsModified } = useBoolean();
   const dateRef = useRef<HTMLInputElement>(null);
 
   const [value = getCurrentYYYYMMDD(), setValue] = useControllableState({
@@ -47,16 +49,25 @@ const OSDatePicker = (props: OSDatePickerProps) => {
 
   const showPicker = () => dateRef.current?.showPicker();
 
-  const setDate = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
+  const setDate = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     setValue(parseYYYYMMDD(value));
+    setIsModified();
+  };
 
   return (
     <Root>
       <Polymorphic as="span" {...restProps} onClick={composeFunctions(showPicker, onClickProp)}>
-        {resolveChildren(children, { value })}
+        {resolveChildren(children, { value, isModified })}
       </Polymorphic>
       <VisuallyHidden>
-        <AbsoluteInput {...restProps} ref={dateRef} type="date" value={value} onChange={setDate} />
+        <AbsoluteInput
+          {...restProps}
+          ref={dateRef}
+          type="date"
+          value={value}
+          onChange={setDate}
+          tabIndex={-1}
+        />
       </VisuallyHidden>
     </Root>
   );

@@ -42,7 +42,7 @@ const AppBar = styled.header`
   justify-content: space-between;
 
   width: 100%;
-  height: 5.2rem;
+  height: 5.6rem;
   padding: 0 2rem;
 `;
 
@@ -51,7 +51,7 @@ const Title = styled.h1`
   left: 50%;
   transform: translateX(-50%);
 
-  ${({ theme }) => theme.typo.subhead2}
+  ${({ theme }) => theme.typo.semibold16}
 `;
 
 const Main = styled.main`

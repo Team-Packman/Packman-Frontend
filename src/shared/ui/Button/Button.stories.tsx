@@ -35,6 +35,9 @@ const ButtonTemplate: Story = {
       <Button variant="contained" {...args}>
         ACTIVE
       </Button>
+      <Button variant="dimmed" {...args}>
+        DIMMED
+      </Button>
       <Button variant="contained" disabled {...args}>
         DISABLED
       </Button>
