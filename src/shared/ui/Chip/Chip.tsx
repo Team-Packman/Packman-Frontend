@@ -18,7 +18,7 @@ const Layout = styled.span<LayoutProps>`
   ${({ theme }) => theme.typo.body4}
   border-radius: 8px;
 
-  transition: color 0.2s;
+  transition: color 0.2s, background-color 0.2s, border 0.2s;
 
   ${({ active, theme: { color } }) =>
     active
@@ -40,6 +40,19 @@ const Chip = ({ active = false, ...restProps }: ChipProps) => (
   <Layout active={active} {...restProps} />
 );
 
-export { Chip };
+type TypeBProps = Omit<ChipProps, 'active'>;
+
+const TypeBLayout = styled(Layout)`
+  ${({ theme }) => theme.typo.medium12}
+
+  border-radius: 34px;
+  padding: 0.2rem 1rem;
+`;
+
+const TypeB = (props: TypeBProps) => <TypeBLayout {...props} active />;
+
+const NamedSpaceChip = Object.assign(Chip, { TypeB });
+
+export { NamedSpaceChip as Chip };
 
 export type { ChipProps };

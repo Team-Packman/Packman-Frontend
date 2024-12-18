@@ -4,9 +4,11 @@ type BivarianceHack<T extends (...args: never[]) => unknown = (...args: unknown[
 
 type BaseFunction = BivarianceHack;
 
-type NonNullableObject<T extends object> = { [K in keyof T]-?: T[K] };
-
 type Equal<T, U> = ((params: T) => T) extends (params: U) => U ? true : false;
+
+type Diff<T, U> = Equal<T, U> extends true ? false : true;
+
+type NonNullableObject<T extends object> = { [K in keyof T]-?: T[K] };
 
 type Values<T extends object> = T[keyof T];
 
@@ -44,14 +46,21 @@ type SnakeToCamel<
     : SnakeToCamel<Rest, `${Acc}${Lowercase<Char>}`>
   : Acc;
 
+type IsPromise<T> = Awaited<T> extends never ? false : Diff<T, Awaited<T>>;
+
+type NonPromise<T> = IsPromise<T> extends true ? never : T;
+
 export type {
   BaseFunction,
   BivarianceHack,
   CamelToSnake,
+  Diff,
   Equal,
   IsLowercase,
+  IsPromise,
   Merge,
   NonNullableObject,
+  NonPromise,
   SnakeToCamel,
   Values,
 };

@@ -56,7 +56,7 @@ const Title = styled.h1`
 
 const Main = styled.main`
   min-height: calc((var(--vh, 1vh) * 100) - 5.2rem);
-  padding: 0 2rem;
+  padding: 0 var(--app-side-padding);
 `;
 
 const SwipeBar = styled.div<{ position: 'left' | 'right' }>`

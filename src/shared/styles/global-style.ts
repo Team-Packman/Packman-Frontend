@@ -19,6 +19,7 @@ const globalStyle = css`
   html,
   body {
     --mw: 48rem;
+    --app-side-padding: 2rem;
 
     font-family: Pretendard, sans-serif;
     font-size: 62.5%;

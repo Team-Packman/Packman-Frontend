@@ -12,10 +12,10 @@ const { STRICT_MODE } = process.env;
 
 const Packman =
   STRICT_MODE === 'on' ? (
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    // <React.StrictMode>
+    <App />
   ) : (
+    // </React.StrictMode>
     <App />
   );
 

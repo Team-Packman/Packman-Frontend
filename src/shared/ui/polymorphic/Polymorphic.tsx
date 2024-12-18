@@ -32,11 +32,11 @@ type PolymorphicProps<E extends ElementType, P extends object> = ValidComponentP
   PropsWithElement<E, P> &
   PropsWithAsChild<P>;
 
-type PolymorphicComponent<P = object> = <E extends ElementType = 'div'>(
-  props: PolymorphicProps<E, P & { ref?: ForwardedRef<ElementRef<E>> }>,
+type PolymorphicComponent<_P = object, _E extends ElementType = ElementType> = <E extends _E>(
+  props: PolymorphicProps<E, _P & { ref?: ForwardedRef<ElementRef<E>> }>,
 ) => ReactNode;
 
-const _Polymorphic = <E extends ElementType = 'div'>(
+const _Polymorphic = <E extends ElementType>(
   props: PolymorphicProps<E, { asChild?: boolean }>,
   forwardedRef: unknown,
 ) => {
@@ -48,9 +48,12 @@ const _Polymorphic = <E extends ElementType = 'div'>(
 
 const Polymorphic = forwardRef(_Polymorphic) as unknown as PolymorphicComponent;
 
-const polymorphic = <P extends PropsWithRenderProps<object, never>, _E extends ElementType = 'div'>(
-  BaseComponent: ForwardRefRenderFunction<ElementRef<_E>, PolymorphicProps<_E, P>>,
-) => forwardRef(BaseComponent);
+const polymorphic = <
+  P extends PropsWithRenderProps<object, never>,
+  E extends ElementType = ElementType,
+>(
+  BaseComponent: ForwardRefRenderFunction<ElementRef<E>, PolymorphicProps<E, P>>,
+) => forwardRef(BaseComponent) as unknown as PolymorphicComponent<P, E>;
 
 export { Polymorphic, polymorphic };
 

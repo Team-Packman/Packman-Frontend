@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import type { ComponentProps } from 'react';
 
 import { Chip } from './Chip';
 
@@ -14,6 +15,10 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+const TypeBTemplate = {
+  render: (args: ComponentProps<typeof Chip.TypeB>) => <Chip.TypeB {...args}>D-32</Chip.TypeB>,
+};
+
 export const Active: Story = {
   args: {
     active: true,
@@ -25,3 +30,5 @@ export const Inactive: Story = {
     active: false,
   },
 };
+
+export const TypeB: Story = TypeBTemplate;
